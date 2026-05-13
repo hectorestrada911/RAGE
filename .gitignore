@@ -25,3 +25,6 @@ frontend/tsconfig.tsbuildinfo
 .cursor/skills/**/__pycache__/
 .cursor/skills/
 .agents/
+
+# Supabase CLI (linked project ref, version cache — local only)
+backend/supabase/.temp/
