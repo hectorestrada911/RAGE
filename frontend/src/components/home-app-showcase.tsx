@@ -217,7 +217,7 @@ function HomeFeedScreen() {
           </div>
           <div style={{ flex: 1, minWidth: 0 }}>
             <p style={{ margin: 0, fontSize: 10, fontWeight: 800, color: "#fff" }}>.edu only events</p>
-            <p style={{ margin: "2px 0 0", fontSize: 8, color: "#a1a1aa", lineHeight: 1.35 }}>Verify your .edu to unlock exclusive drops.</p>
+            <p style={{ margin: "2px 0 0", fontSize: 8, color: "#a1a1aa", lineHeight: 1.35 }}>RSVP in two taps—your QR updates live at the door.</p>
           </div>
           <span style={{ fontSize: 8, fontWeight: 800, letterSpacing: "0.05em", textTransform: "uppercase", color: "#000", background: "#4BFA94", borderRadius: 8, padding: "7px 8px", flexShrink: 0 }}>
             Verify

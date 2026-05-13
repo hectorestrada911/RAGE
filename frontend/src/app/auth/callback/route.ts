@@ -6,6 +6,14 @@ import { safeNextPath } from "@/lib/event-draft";
 /**
  * Supabase redirects here after magic-link / OTP email (PKCE `code`, or legacy `token_hash`).
  * Session cookies are set on the redirect response, then `/auth/complete` picks the final path.
+ *
+ * Cross-device email links: if the confirmation email uses a PKCE `code` in the URL, the user must
+ * complete the exchange on the **same browser** that started sign-up (where the code verifier cookie
+ * was written). If users often open the email on another phone, change the Supabase Auth email
+ * template “Confirm signup” (and similar) to hit this route with **`token_hash` + `type`** instead
+ * of a PKCE `code`, e.g.:
+ *   {{ .SiteURL }}/auth/callback?token_hash={{ .TokenHash }}&type=signup&next=...
+ * This route already supports `token_hash` via `verifyOtp` below.
  */
 export async function GET(request: NextRequest) {
   const url = new URL(request.url);

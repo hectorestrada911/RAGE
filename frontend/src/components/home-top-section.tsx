@@ -35,14 +35,14 @@ const scenes = [
     cta: { label: "Sample event", href: "/demo" },
   },
   {
-    eyebrow: ".edu verified",
-    line1: "School email",
-    line2: "only.",
-    cycleWords: ["only.", "verified.", "protected."],
-    body: "Only verified students see private events and buy tickets. Real community, no randos.",
-    leftTag: "BOTS\nNOT WELCOME",
-    rightTag: ".EDU GATED\nBY DEFAULT",
-    cta: { label: "Verify your .edu", href: "/verify-edu" },
+    eyebrow: "Host on RAGE",
+    line1: "Publish fast.",
+    line2: "Sell clean.",
+    cycleWords: ["Sell clean.", "Scan fast.", "Own the door."],
+    body: "One flow for flyer, tickets, and QR check-in — so the week-of chaos doesn’t live in your DMs.",
+    leftTag: "BUILT FOR\nCOLLEGE NIGHTS",
+    rightTag: "MOBILE\nFIRST",
+    cta: { label: "Register", href: "/signup" },
   },
   {
     eyebrow: "Door flow",
@@ -321,9 +321,9 @@ function FeedScreen({ progress }: { progress: MotionValue<number> }) {
             🎓
           </div>
           <div style={{ flex: 1, minWidth: 0 }}>
-            <p style={{ margin: 0, fontSize: 11, fontWeight: 800, color: "#fff", letterSpacing: "-0.01em" }}>.edu only events</p>
+            <p style={{ margin: 0, fontSize: 11, fontWeight: 800, color: "#fff", letterSpacing: "-0.01em" }}>Tonight’s drop</p>
             <p style={{ margin: "3px 0 0", fontSize: 9, color: "#a1a1aa", lineHeight: 1.35 }}>
-              Verify your .edu email to unlock exclusive events and access.
+              RSVP in two taps — tickets land in My tickets with a live QR.
             </p>
           </div>
           <span
@@ -340,7 +340,7 @@ function FeedScreen({ progress }: { progress: MotionValue<number> }) {
               boxShadow: "0 8px 20px -8px rgba(75,250,148,0.55)",
             }}
           >
-            Verify
+            Open
           </span>
         </motion.div>
       </div>
@@ -397,8 +397,8 @@ function FeedScreen({ progress }: { progress: MotionValue<number> }) {
   );
 }
 
-/* ─── phone screen 2: .edu verify (matches marketing verify mockups) ─ */
-function VerifyScreen({ progress }: { progress: MotionValue<number> }) {
+/* ─── phone screen 2: register / host (marketing mock) ─ */
+function RegisterScreen({ progress }: { progress: MotionValue<number> }) {
   const reduceMotion = useReducedMotion();
   const badgeScale = useTransform(progress, [0.32, 0.46], [0.6, 1]);
   const badgeOpacity = useTransform(progress, [0.32, 0.42], [0, 1]);
@@ -451,7 +451,7 @@ function VerifyScreen({ progress }: { progress: MotionValue<number> }) {
         </motion.div>
 
         <motion.p style={{ opacity: titleOpacity, y: titleY, margin: 0, textAlign: "center", fontSize: 9, fontWeight: 700, letterSpacing: "0.16em", color: "#4BFA94", textTransform: "uppercase" }}>
-          .edu required
+          Host tools
         </motion.p>
         <motion.h2
           style={{
@@ -466,14 +466,14 @@ function VerifyScreen({ progress }: { progress: MotionValue<number> }) {
             lineHeight: 1.15,
           }}
         >
-          Verify your .edu email
+          Create your first night
         </motion.h2>
         <motion.p style={{ opacity: titleOpacity, y: titleY, margin: "6px 0 0", textAlign: "center", fontSize: 10, color: "#9ca3af", lineHeight: 1.4 }}>
-          Student-only events and perks.
+          Flyer, tickets, and QR check-in — one polished flow.
         </motion.p>
 
         <motion.div style={{ opacity: formOpacity, y: formY, marginTop: 12, width: "100%" }}>
-          <p style={{ margin: "0 0 5px", fontSize: 10, fontWeight: 600, color: "#a1a1aa" }}>Your .edu email</p>
+          <p style={{ margin: "0 0 5px", fontSize: 10, fontWeight: 600, color: "#a1a1aa" }}>Email</p>
           <div
             style={{
               display: "flex",
@@ -490,7 +490,7 @@ function VerifyScreen({ progress }: { progress: MotionValue<number> }) {
               <rect x="3" y="5" width="18" height="14" rx="2" />
               <path d="M3 7l9 6 9-6" />
             </svg>
-            <span style={{ fontSize: 11, color: "#71717a" }}>name@school.edu</span>
+            <span style={{ fontSize: 11, color: "#71717a" }}>you@email.com</span>
           </div>
           <p style={{ margin: "6px 0 0", display: "flex", alignItems: "center", gap: 5, fontSize: 8, color: "#737373", lineHeight: 1.35 }}>
             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#52525b" strokeWidth="2" style={{ flexShrink: 0 }} aria-hidden>
@@ -514,7 +514,7 @@ function VerifyScreen({ progress }: { progress: MotionValue<number> }) {
                 color: "#000",
               }}
             >
-              Verify student email
+              Create account
             </span>
             <motion.div
               aria-hidden
@@ -530,14 +530,13 @@ function VerifyScreen({ progress }: { progress: MotionValue<number> }) {
               transition={reduceMotion ? undefined : { duration: 3, repeat: Infinity, ease: "linear", repeatDelay: 1 }}
             />
           </div>
-          <p style={{ margin: "8px 0 0", fontSize: 8, color: "#52525b", textAlign: "center" }}>.edu addresses only</p>
         </motion.div>
 
         <motion.div style={{ opacity: whyOpacity, y: whyY, marginTop: 12 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
             <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.1)" }} />
             <span style={{ fontSize: 7, fontWeight: 700, letterSpacing: "0.12em", color: "#737373", textTransform: "uppercase", whiteSpace: "nowrap" }}>
-              Why verify
+              Why RAGE
             </span>
             <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.1)" }} />
           </div>
@@ -546,8 +545,8 @@ function VerifyScreen({ progress }: { progress: MotionValue<number> }) {
               icon: (
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
               ),
-              title: "Trusted community",
-              body: "Keeps bots and randos out.",
+              title: "One account",
+              body: "Tickets, payouts, and door tools together.",
             },
             {
               icon: (
@@ -556,8 +555,8 @@ function VerifyScreen({ progress }: { progress: MotionValue<number> }) {
                   <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                 </>
               ),
-              title: "Exclusive access",
-              body: "Campus events and perks.",
+              title: "Live QR check-in",
+              body: "Scan fast at the door—no screenshots.",
             },
           ].map((row) => (
             <div key={row.title} style={{ display: "flex", gap: 8, marginBottom: 8 }}>
@@ -1050,7 +1049,7 @@ export function HomeTopSection() {
                   <FeedScreen progress={progress} />
                 </motion.div>
                 <motion.div style={{ opacity: phoneOps[1], position: "absolute", inset: 0, willChange: "opacity", transform: "translateZ(0)" }}>
-                  <VerifyScreen progress={progress} />
+                  <RegisterScreen progress={progress} />
                 </motion.div>
                 <motion.div style={{ opacity: phoneOps[2], position: "absolute", inset: 0, willChange: "opacity", transform: "translateZ(0)" }}>
                   <TicketScreen progress={progress} />

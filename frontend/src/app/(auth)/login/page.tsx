@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, Suspense, useEffect, useState } from "react";
+import { FormEvent, Suspense, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
@@ -13,7 +13,7 @@ import {
   useAuthMotion,
 } from "@/components/auth-shell";
 import { EduVerifyShieldIcon } from "@/components/edu-verify-shield-icon";
-import { mapAuthActionError, mapAuthCallbackError } from "@/lib/auth-errors";
+import { mapAuthActionError, mapAuthCallbackError, EMAIL_NOT_VERIFIED_LOGIN_MESSAGE } from "@/lib/auth-errors";
 import { getSupabaseBrowserClient } from "@/lib/supabase-browser";
 import { readEventDraft, safeNextPath } from "@/lib/event-draft";
 import { flushUi } from "@/lib/flush-ui";
@@ -29,7 +29,11 @@ function LoginForm() {
   const effectiveNext = searchParams.get("next") ? next : hasEventDraft ? "/dashboard/events/new" : next;
   const justSignedUp = searchParams.get("justSignedUp") === "1";
   const verified = searchParams.get("verified") === "1";
-  const urlError = mapAuthCallbackError(searchParams.get("error"));
+  /** Callback failures put `?error=` on `/login`; keep message after stripping the query so it is not mistaken for the next password attempt. */
+  const authCallbackRaw = searchParams.get("error") ?? searchParams.get("error_description");
+  const authCallbackMappedLive = useMemo(() => mapAuthCallbackError(authCallbackRaw), [authCallbackRaw]);
+  const [authCallbackBanner, setAuthCallbackBanner] = useState<string | null>(null);
+  const urlError = authCallbackBanner ?? authCallbackMappedLive;
 
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
@@ -40,10 +44,22 @@ function LoginForm() {
     setHasEventDraft(Boolean(readEventDraft()));
   }, []);
 
+  useEffect(() => {
+    if (!authCallbackRaw) return;
+    const mapped = mapAuthCallbackError(authCallbackRaw);
+    if (mapped) setAuthCallbackBanner(mapped);
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("error");
+    params.delete("error_description");
+    const qs = params.toString();
+    router.replace(`/login${qs ? `?${qs}` : ""}`, { scroll: false });
+  }, [authCallbackRaw, searchParams, router]);
+
   async function signInWithGoogle() {
     flushUi(() => {
       setLoading(true);
       setError(null);
+      setAuthCallbackBanner(null);
     });
     const redirectTo = `${window.location.origin}/auth/callback?next=${encodeURIComponent(effectiveNext)}`;
     const { error: oauthErr } = await supabase.auth.signInWithOAuth({ provider: "google", options: { redirectTo } });
@@ -58,6 +74,7 @@ function LoginForm() {
     flushUi(() => {
       setLoading(true);
       setError(null);
+      setAuthCallbackBanner(null);
     });
     const formData = new FormData(e.currentTarget);
     const formEmail = String(formData.get("email"));
@@ -67,6 +84,7 @@ function LoginForm() {
       setLoading(false);
       return setError(mapAuthActionError(signErr.message, "login"));
     }
+    setAuthCallbackBanner(null);
     try {
       const shouldAutoRoute = !searchParams.get("next");
       if (!shouldAutoRoute) {
@@ -141,7 +159,6 @@ function LoginForm() {
   }
 
   const signupHref = `/signup?next=${encodeURIComponent(effectiveNext)}`;
-  const verifyEduHref = `/verify-edu?next=${encodeURIComponent(effectiveNext)}`;
 
   const inputInnerClass =
     "min-w-0 flex-1 border-0 bg-transparent p-0 text-sm text-white outline-none ring-0 placeholder:text-zinc-600";
@@ -293,7 +310,7 @@ function LoginForm() {
               ) : null}
             </AnimatePresence>
 
-            {error?.includes("Email not verified yet") ? (
+            {error === EMAIL_NOT_VERIFIED_LOGIN_MESSAGE ? (
               <button
                 type="button"
                 onClick={() => void resendVerificationEmail()}
@@ -375,13 +392,6 @@ function LoginForm() {
               className="font-bold text-white underline decoration-brand-green/50 underline-offset-4 transition hover:decoration-brand-green"
             >
               Create account
-            </Link>
-          </p>
-
-          <p className="mt-4 text-center text-xs text-zinc-500">
-            Student?{" "}
-            <Link href={verifyEduHref} className="font-semibold text-brand-green underline-offset-2 hover:underline">
-              Verify your .edu email
             </Link>
           </p>
 

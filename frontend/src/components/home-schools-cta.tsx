@@ -104,22 +104,22 @@ export function HomeSchoolsCta() {
               </span>
             </h2>
             <p className="mx-auto mt-6 max-w-md text-base leading-relaxed text-zinc-400">
-              RAGE is live at universities across the country. Verify your .edu and see every party, show, and event happening at your school.
+              RAGE is live on campuses nationwide. Grab tickets with a live QR, or publish your own night in one flow.
             </p>
             <div className="mt-10 flex flex-wrap justify-center gap-4">
               <Link
-                href="/verify-edu"
+                href="/signup"
                 className="inline-flex h-13 items-center rounded-full bg-white px-9 text-[11px] font-bold uppercase tracking-[0.16em] text-black transition hover:bg-zinc-200"
                 style={{ height: 52 }}
               >
-                Verify your .edu
+                Register
               </Link>
               <Link
-                href="/demo"
+                href="/create-event"
                 className="inline-flex items-center rounded-full border border-white/20 px-9 text-[11px] font-semibold uppercase tracking-[0.16em] text-white transition hover:border-white/40"
                 style={{ height: 52 }}
               >
-                Sample event →
+                Create event
               </Link>
             </div>
             <p className="mt-5 text-xs text-zinc-500">

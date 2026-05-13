@@ -204,9 +204,6 @@ export function SiteHeader() {
                     <Link href="/demo" role="menuitem" className={menuLinkClass()} onClick={closeMenus}>
                       Sample event
                     </Link>
-                    <Link href="/verify-edu" role="menuitem" className={menuLinkClass()} onClick={closeMenus}>
-                      Verify .edu
-                    </Link>
                     <Link href="/faq" role="menuitem" className={menuLinkClass()} onClick={closeMenus}>
                       FAQ
                     </Link>
@@ -226,9 +223,6 @@ export function SiteHeader() {
                     </Link>
                     <Link href="/demo" role="menuitem" className={menuLinkClass()} onClick={closeMenus}>
                       Sample event
-                    </Link>
-                    <Link href="/verify-edu" role="menuitem" className={menuLinkClass()} onClick={closeMenus}>
-                      Verify .edu
                     </Link>
                     <Link href="/faq" role="menuitem" className={menuLinkClass()} onClick={closeMenus}>
                       FAQ
@@ -322,13 +316,6 @@ export function SiteHeader() {
                   My tickets
                 </Link>
                 <Link
-                  href="/verify-edu"
-                  onClick={() => setMobileOpen(false)}
-                  className="block rounded-lg px-2.5 py-2 text-sm font-medium text-zinc-200 transition hover:bg-white/[0.05] hover:text-white"
-                >
-                  Verify .edu
-                </Link>
-                <Link
                   href="/faq"
                   onClick={() => setMobileOpen(false)}
                   className="block rounded-lg px-2.5 py-2 text-sm font-medium text-zinc-200 transition hover:bg-white/[0.05] hover:text-white"
@@ -358,13 +345,6 @@ export function SiteHeader() {
                   className="block rounded-lg px-2.5 py-2 text-sm font-medium text-zinc-200 transition hover:bg-white/[0.05] hover:text-white"
                 >
                   Sample event
-                </Link>
-                <Link
-                  href="/verify-edu"
-                  onClick={() => setMobileOpen(false)}
-                  className="block rounded-lg px-2.5 py-2 text-sm font-medium text-zinc-200 transition hover:bg-white/[0.05] hover:text-white"
-                >
-                  Verify .edu
                 </Link>
                 <Link
                   href="/faq"

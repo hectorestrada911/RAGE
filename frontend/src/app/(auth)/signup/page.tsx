@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, Suspense, useEffect, useState } from "react";
+import { FormEvent, Suspense, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
@@ -29,7 +29,10 @@ function SignupForm() {
   const [hasEventDraft, setHasEventDraft] = useState(false);
   const hostIntent = next.startsWith("/dashboard") || hasEventDraft;
   const hostNext = next.startsWith("/dashboard") ? next : "/dashboard/events/new";
-  const urlError = mapAuthCallbackError(searchParams.get("error"));
+  const authCallbackRaw = searchParams.get("error") ?? searchParams.get("error_description");
+  const authCallbackMappedLive = useMemo(() => mapAuthCallbackError(authCallbackRaw), [authCallbackRaw]);
+  const [authCallbackBanner, setAuthCallbackBanner] = useState<string | null>(null);
+  const urlError = authCallbackBanner ?? authCallbackMappedLive;
 
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
@@ -39,10 +42,22 @@ function SignupForm() {
     setHasEventDraft(Boolean(readEventDraft()));
   }, []);
 
+  useEffect(() => {
+    if (!authCallbackRaw) return;
+    const mapped = mapAuthCallbackError(authCallbackRaw);
+    if (mapped) setAuthCallbackBanner(mapped);
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("error");
+    params.delete("error_description");
+    const qs = params.toString();
+    router.replace(`/signup${qs ? `?${qs}` : ""}`, { scroll: false });
+  }, [authCallbackRaw, searchParams, router]);
+
   async function signInWithGoogle() {
     flushUi(() => {
       setLoading(true);
       setError(null);
+      setAuthCallbackBanner(null);
     });
     const redirectTo = `${window.location.origin}/auth/callback?next=${encodeURIComponent(hostIntent ? hostNext : next)}`;
     const { error: oauthErr } = await supabase.auth.signInWithOAuth({ provider: "google", options: { redirectTo } });
@@ -55,6 +70,7 @@ function SignupForm() {
   async function onPasswordSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError(null);
+    setAuthCallbackBanner(null);
     const formData = new FormData(e.currentTarget);
     const formEmail = String(formData.get("email"));
     const password = String(formData.get("password"));
@@ -100,7 +116,6 @@ function SignupForm() {
   }
 
   const loginHref = `/login?next=${encodeURIComponent(hostIntent ? hostNext : next)}`;
-  const verifyEduHref = `/verify-edu?next=${encodeURIComponent(hostIntent ? hostNext : next)}`;
 
   const inputInnerClass =
     "min-w-0 flex-1 border-0 bg-transparent p-0 text-sm text-white outline-none ring-0 placeholder:text-zinc-600";
@@ -328,14 +343,6 @@ function SignupForm() {
             >
               Log in
             </Link>
-          </p>
-
-          <p className="mt-4 text-center text-xs text-zinc-500">
-            Prefer a magic link with your school email?{" "}
-            <Link href={verifyEduHref} className="font-semibold text-brand-green underline-offset-2 hover:underline">
-              Verify with .edu
-            </Link>
-            .
           </p>
 
           <p className="mt-4 text-center text-xs text-zinc-500">
