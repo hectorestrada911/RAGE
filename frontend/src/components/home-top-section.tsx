@@ -549,15 +549,22 @@ function HostCreateEventPreviewScreen({ progress }: { progress: MotionValue<numb
             position: "relative",
             borderRadius: 18,
             overflow: "hidden",
-            border: `1px solid ${fieldBorder}`,
-            boxShadow: "0 26px 50px -32px rgba(0,0,0,0.95), inset 0 1px 0 rgba(255,255,255,0.05)",
+            border: "1px solid rgba(255,255,255,0.08)",
+            boxShadow: "0 26px 50px -32px rgba(0,0,0,0.95)",
             background: "#0a0a0a",
             height: 202,
             flexShrink: 0,
           }}
         >
+          {/* Wider than frame so we crop harsh green stage-light columns at photo edges */}
           <motion.div
-            style={{ position: "absolute", inset: 0 }}
+            style={{
+              position: "absolute",
+              top: 0,
+              bottom: 0,
+              left: "-7%",
+              right: "-7%",
+            }}
             animate={reduceMotion ? undefined : { scale: [1, 1.04, 1] }}
             transition={reduceMotion ? undefined : { duration: 12, repeat: Infinity, ease: "easeInOut" }}
           >
@@ -576,7 +583,9 @@ function HostCreateEventPreviewScreen({ progress }: { progress: MotionValue<numb
             style={{
               position: "absolute",
               inset: 0,
-              background: "linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 55%)",
+              background:
+                "linear-gradient(90deg, rgba(0,0,0,0.55) 0%, transparent 14%, transparent 86%, rgba(0,0,0,0.55) 100%), linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 55%)",
+              pointerEvents: "none",
             }}
           />
           {/* Replace cover chip */}
