@@ -270,7 +270,7 @@ function LoginForm() {
               </div>
               <p className="mt-2 flex gap-2 text-xs leading-relaxed text-zinc-500">
                 <Lock className="mt-0.5 h-3.5 w-3.5 shrink-0 text-zinc-600" aria-hidden />
-                <span>We use your email only for sign-in and account notices—no spam.</span>
+                <span>We use your email only for sign-in and account notices. No spam.</span>
               </p>
             </div>
 

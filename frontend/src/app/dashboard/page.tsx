@@ -146,7 +146,7 @@ export default async function DashboardPage() {
             Events &amp; <span className="bg-gradient-to-r from-brand-green via-emerald-200 to-teal-200 bg-clip-text text-transparent">analytics</span>
           </h1>
           <p className="mt-2 max-w-xl text-sm leading-relaxed text-zinc-400">
-            Sell tickets, scan at the door, and pay yourself — all in one place.
+            Sell tickets, scan at the door, and pay yourself, all in one place.
           </p>
         </div>
         <div className="flex flex-wrap gap-2 sm:shrink-0">

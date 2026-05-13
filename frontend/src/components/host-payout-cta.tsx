@@ -138,7 +138,7 @@ export default function HostPayoutCta() {
               </span>
             </div>
             <p className="mt-1 text-sm text-zinc-200">
-              {ready ? "Withdraw your earnings to your linked bank — usually arrives in 1–2 business days." : "Set up Stripe Connect once to unlock withdrawals."}
+              {ready ? "Withdraw your earnings to your linked bank. Usually arrives in 1–2 business days." : "Set up Stripe Connect once to unlock withdrawals."}
             </p>
             {!ready ? (
               <p className="mt-1 text-xs text-zinc-500">

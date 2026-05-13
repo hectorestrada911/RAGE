@@ -36,7 +36,7 @@ export async function sendHostWelcomeEmail(params: { to: string; displayName: st
   const createUrl = `${env.appUrl}/dashboard/events/new`;
   const bodyHtml = `
     <p style="margin:0 0 14px;">Hi ${name},</p>
-    <p style="margin:0 0 18px;">Welcome to <strong style="color:#ffffff;">RAGE</strong> — one place to publish, sell, and run the door without the week-of chaos.</p>
+    <p style="margin:0 0 18px;">Welcome to <strong style="color:#ffffff;">RAGE</strong>. One place to publish, sell, and run the door without the week-of chaos.</p>
     ${rageBenefitStrip([
       { kicker: "Publish", body: "Flyer-forward event page that feels legit on a phone." },
       { kicker: "Sell", body: "Mobile tickets + QR, no PDF scavenger hunt." },
@@ -57,7 +57,7 @@ export async function sendHostWelcomeEmail(params: { to: string; displayName: st
     from: env.from,
     to: [params.to],
     replyTo: env.supportInbox,
-    subject: "Welcome to RAGE — your first event is a few minutes away",
+    subject: "Welcome to RAGE: your first event is a few minutes away",
     html,
     text: `Hi ${params.displayName.trim() || "there"},\n\nWelcome to RAGE. Create your first event: ${env.appUrl}/dashboard/events/new\n\nRAGE`,
     tags: [{ name: "type", value: "welcome_host" }],
@@ -93,19 +93,19 @@ export async function sendVerificationResendNudgeEmail(params: { to: string }): 
 
   const bodyHtml = `
     <p style="margin:0 0 14px;">Hi ${name},</p>
-    <p style="margin:0 0 18px;">We just fired a <strong style="color:#ffffff;">fresh confirmation link</strong> to this inbox. <strong style="color:#ffffff;">One tap</strong> unlocks your account — then you can go from idea to live guest list absurdly fast.</p>
+    <p style="margin:0 0 18px;">We just fired a <strong style="color:#ffffff;">fresh confirmation link</strong> to this inbox. <strong style="color:#ffffff;">One tap</strong> unlocks your account, then you can go from idea to live guest list absurdly fast.</p>
     ${rageBenefitStrip([
       { kicker: "Confirm", body: "Use the link in the other email from us (same inbox)." },
-      { kicker: "Publish", body: "Flyer, story, tickets — one polished flow." },
+      { kicker: "Publish", body: "Flyer, story, tickets, one polished flow." },
       { kicker: "Door night", body: "QR check-in that doesn’t bottleneck at midnight." },
     ])}
     ${ragePrimaryButton("Open RAGE after you verify", loginUrl)}
     ${rageSecondaryLink("Create an event (once you’re in)", createUrl)}
-    <p style="margin:18px 0 0;font-size:12px;line-height:1.65;color:rgba(255,255,255,0.48);">Didn’t ask for this? Ignore it — nothing changes on your account.</p>
+    <p style="margin:18px 0 0;font-size:12px;line-height:1.65;color:rgba(255,255,255,0.48);">Didn’t ask for this? Ignore it. Nothing changes on your account.</p>
   `;
 
   const html = rageEmailDocument({
-    preheader: "One tap on the link we sent — then you’re in.",
+    preheader: "One tap on the link we sent. Then you’re in.",
     title: "You’re one tap from inside",
     eyebrow: "From RAGE",
     deck: "Confirm, then the fun part: your first night goes live.",
@@ -116,9 +116,9 @@ export async function sendVerificationResendNudgeEmail(params: { to: string }): 
     from: env.from,
     to: [params.to],
     replyTo: env.supportInbox,
-    subject: "One tap left — then RAGE is yours",
+    subject: "One tap left, then RAGE is yours",
     html,
-    text: `Hi ${displayNameFromEmail(params.to)},\n\nWe sent a fresh confirmation link to this inbox — one tap unlocks RAGE.\n\nSign in: ${loginUrl}\nCreate an event (after you verify): ${createUrl}\n\n— RAGE`,
+    text: `Hi ${displayNameFromEmail(params.to)},\n\nWe sent a fresh confirmation link to this inbox. One tap unlocks RAGE.\n\nSign in: ${loginUrl}\nCreate an event (after you verify): ${createUrl}\n\nRAGE`,
     tags: [{ name: "type", value: "verification_resend_nudge" }],
   });
 
@@ -144,22 +144,22 @@ export async function sendUnverifiedRegistrationReminderEmail(params: {
 
   const bodyHtml = `
     <p style="margin:0 0 14px;">Hi ${name},</p>
-    <p style="margin:0 0 18px;">Your <strong style="color:#ffffff;">RAGE</strong> spot is saved — we’re holding the door for you. Confirm your email and you can publish a night in <strong style="color:#ffffff;">one sitting</strong>: flyer, tickets, and QR check-in wired together.</p>
+    <p style="margin:0 0 18px;">Your <strong style="color:#ffffff;">RAGE</strong> spot is saved. We’re holding the door for you. Confirm your email and you can publish a night in <strong style="color:#ffffff;">one sitting</strong>: flyer, tickets, and QR check-in wired together.</p>
     ${rageBenefitStrip([
       { kicker: "Speed", body: "Guest link live without duct-taping five apps." },
-      { kicker: "Trust", body: "Buyers get real mobile tickets — not screenshots." },
+      { kicker: "Trust", body: "Buyers get real mobile tickets, not screenshots." },
       { kicker: "Door", body: "Scan QR so security doesn’t become the headline." },
     ])}
     ${ragePrimaryButton("Confirm & jump in", params.confirmUrl)}
     ${rageSecondaryLink("Sign in", loginUrl)}
     <p style="margin:14px 0 0;font-size:12px;line-height:1.65;color:rgba(255,255,255,0.52);">Button didn’t cooperate? Open <a href="${escapeHtml(loginUrl)}" style="color:#4BFA94;font-weight:800;text-decoration:none;border-bottom:1px solid rgba(75,250,148,0.35);">${escapeHtml(loginUrl)}</a> → <strong style="color:#ffffff;">Resend verification</strong>.</p>
     ${rageSecondaryLink("Then: create your first event", createUrl)}
-    <p style="margin:16px 0 0;font-size:12px;line-height:1.6;color:rgba(255,255,255,0.42);">Not you? Ignore this — no hard feelings.</p>
+    <p style="margin:16px 0 0;font-size:12px;line-height:1.6;color:rgba(255,255,255,0.42);">Not you? Ignore this. No hard feelings.</p>
   `;
 
   const html = rageEmailDocument({
     preheader: "We saved your spot. One confirmation, then go live.",
-    title: "Still yours — finish confirming",
+    title: "Still yours: finish confirming",
     eyebrow: "From RAGE",
     deck: "The hosts who move tonight are the ones who don’t stall at the inbox.",
     bodyHtml,
@@ -170,9 +170,9 @@ export async function sendUnverifiedRegistrationReminderEmail(params: {
     from: env.from,
     to: [params.to],
     replyTo: env.supportInbox,
-    subject: "Your RAGE invite is still open — one tap to confirm",
+    subject: "Your RAGE invite is still open. One tap to confirm",
     html,
-    text: `Hi ${textName},\n\nYou started a RAGE account. Confirm your email to finish signup:\n${params.confirmUrl}\n\nSign in or resend verification: ${loginUrl}\n\nCreate an event (after you verify): ${createUrl}\n\n— RAGE`,
+    text: `Hi ${textName},\n\nYou started a RAGE account. Confirm your email to finish signup:\n${params.confirmUrl}\n\nSign in or resend verification: ${loginUrl}\n\nCreate an event (after you verify): ${createUrl}\n\nRAGE`,
     tags: [{ name: "type", value: "unverified_registration_reminder" }],
   });
 
@@ -192,19 +192,19 @@ export async function sendCreateEventReminderEmail(params: { to: string; display
 
   const bodyHtml = `
     <p style="margin:0 0 14px;">Hi ${name},</p>
-    <p style="margin:0 0 18px;">You’re <strong style="color:#ffffff;">verified</strong> — the only thing between you and a live guest list is one focused session. RAGE is built so flyer, story, tickets, and door check-in aren’t four separate panic threads the week of the party.</p>
+    <p style="margin:0 0 18px;">You’re <strong style="color:#ffffff;">verified</strong>. The only thing between you and a live guest list is one focused session. RAGE is built so flyer, story, tickets, and door check-in aren’t four separate panic threads the week of the party.</p>
     ${rageBenefitStrip([
       { kicker: "Look legit", body: "A shareable page that feels premium on a phone." },
-      { kicker: "Move tickets", body: "Buyers checkout once — QR lands in their inbox." },
+      { kicker: "Move tickets", body: "Buyers checkout once. QR lands in their inbox." },
       { kicker: "Own the door", body: "Scan QR; no clipboard heroics at peak time." },
     ])}
     ${ragePrimaryButton("Create your first event", createUrl)}
     ${rageSecondaryLink("Peek your dashboard", dashboardUrl)}
-    <p style="margin:18px 0 0;font-size:12px;line-height:1.65;color:rgba(255,255,255,0.45);">Buying tickets only? Ignore this — we’ll stay out of your way.</p>
+    <p style="margin:18px 0 0;font-size:12px;line-height:1.65;color:rgba(255,255,255,0.45);">Buying tickets only? Ignore this. We’ll stay out of your way.</p>
   `;
 
   const html = rageEmailDocument({
-    preheader: "You’re verified. Publish tonight — flyer, tickets, door in one flow.",
+    preheader: "You’re verified. Publish tonight: flyer, tickets, door in one flow.",
     title: "Let’s put your first night live",
     eyebrow: "Host reminder",
     deck: "Most hosts finish their first publish in under 15 minutes.",
@@ -216,9 +216,9 @@ export async function sendCreateEventReminderEmail(params: { to: string; display
     from: env.from,
     to: [params.to],
     replyTo: env.supportInbox,
-    subject: "You’re verified — ready to publish your first RAGE night?",
+    subject: "You’re verified. Ready to publish your first RAGE night?",
     html,
-    text: `Hi ${plainName},\n\nYou’re set up on RAGE — create your first event here:\n${createUrl}\n\nDashboard: ${dashboardUrl}\n\n— RAGE`,
+    text: `Hi ${plainName},\n\nYou’re set up on RAGE. Create your first event here:\n${createUrl}\n\nDashboard: ${dashboardUrl}\n\nRAGE`,
     tags: [{ name: "type", value: "create_event_reminder" }],
   });
 
@@ -355,7 +355,7 @@ export async function sendTicketPurchaseConfirmation(params: {
       title: "Your tickets are ready",
       bodyHtml: `
         <p style="margin:0 0 14px;">Hi ${buyer},</p>
-        <p style="margin:0 0 16px;">Thanks — your purchase is confirmed for <strong style="color:#ffffff;">${title}</strong>.</p>
+        <p style="margin:0 0 16px;">Thanks. Your purchase is confirmed for <strong style="color:#ffffff;">${title}</strong>.</p>
         ${detailRows}
         ${ragePrimaryButton("Open My tickets", ticketsUrl)}
         ${rageSecondaryLink("View event page", eventUrl)}

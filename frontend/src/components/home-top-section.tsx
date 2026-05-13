@@ -39,7 +39,7 @@ const scenes = [
     line1: "Publish fast.",
     line2: "Sell clean.",
     cycleWords: ["Sell clean.", "Scan fast.", "Own the door."],
-    body: "One flow for flyer, tickets, and QR check-in — so the week-of chaos doesn’t live in your DMs.",
+    body: "One flow for flyer, tickets, and QR check-in, so the week-of chaos doesn’t live in your DMs.",
     leftTag: "BUILT FOR\nCOLLEGE NIGHTS",
     rightTag: "MOBILE\nFIRST",
     cta: { label: "Register", href: "/signup" },

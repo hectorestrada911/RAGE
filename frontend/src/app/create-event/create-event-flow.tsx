@@ -777,7 +777,7 @@ export function CreateEventFlow({ flowMode = "auto", onPublish }: CreateEventFlo
             <SectionCard
               step={1}
               title="The flyer"
-              subtitle="Vertical 4:5 — this is the first thing guests see."
+              subtitle="Vertical 4:5. This is the first thing guests see."
               done={sectionDone.flyer}
             >
               {hasSelectedFlyer ? (
@@ -998,7 +998,7 @@ export function CreateEventFlow({ flowMode = "auto", onPublish }: CreateEventFlo
               <div className="flex items-start gap-2 rounded-xl border border-brand-green/20 bg-brand-green/[0.06] px-3.5 py-3 text-[12px] leading-relaxed text-zinc-300">
                 <Sparkles className="mt-0.5 h-3.5 w-3.5 shrink-0 text-brand-green" strokeWidth={2} aria-hidden />
                 <span>
-                  Sales turn <span className="font-semibold text-brand-green">ON automatically</span> after publish — guests can buy right away. Pause anytime from the host event page.
+                  Sales turn <span className="font-semibold text-brand-green">ON automatically</span> after publish, so guests can buy right away. Pause anytime from the host event page.
                 </span>
               </div>
 

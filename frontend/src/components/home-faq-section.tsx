@@ -7,7 +7,7 @@ import { FaqAccordion, type FaqAccordionItem } from "@/components/faq-accordion"
 const faqItems: FaqAccordionItem[] = [
   {
     q: "How do I get into RAGE events?",
-    a: "Create an account, find your event, and check out in a few taps. Your QR lands in My tickets—turn brightness up at the door for a fast scan.",
+    a: "Create an account, find your event, and check out in a few taps. Your QR lands in My tickets. Turn brightness up at the door for a fast scan.",
   },
   {
     q: "Do I need a school email?",
@@ -16,7 +16,7 @@ const faqItems: FaqAccordionItem[] = [
   },
   {
     q: "Where do I find my ticket after checkout?",
-    a: "Open My tickets. Every purchase is tied to your account with a live QR—no screenshots, no PDF hunting.",
+    a: "Open My tickets. Every purchase is tied to your account with a live QR. No screenshots, no PDF hunting.",
   },
   {
     q: "What about refunds?",
@@ -55,7 +55,7 @@ export function HomeFaqSection() {
             questions
           </h2>
           <p className="mt-4 max-w-xl text-sm leading-relaxed text-zinc-500 sm:text-base">
-            Tickets, door check-in, payouts, and access—clear answers before you buy or host.
+            Tickets, door check-in, payouts, and access. Clear answers before you buy or host.
           </p>
           <div className="mt-6 flex flex-wrap gap-2">
             {["Tickets", "Access", "Refunds", "Hosts", "Support"].map((tag) => (

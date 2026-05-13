@@ -210,7 +210,7 @@ export default async function AccountPage() {
               <div>
                 <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500">Your events</p>
                 <h2 className="mt-1 text-xl font-black uppercase tracking-tight text-white sm:text-2xl">Quick access</h2>
-                <p className="mt-1 text-sm text-zinc-500">Jump back in — full analytics and exports live under Events & analytics.</p>
+                <p className="mt-1 text-sm text-zinc-500">Jump back in. Full analytics and exports live under Events & analytics.</p>
               </div>
               <Link
                 href="/dashboard"

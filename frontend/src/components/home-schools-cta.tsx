@@ -104,7 +104,7 @@ export function HomeSchoolsCta() {
                 </span>
               </h2>
               <p className="mx-auto mt-6 max-w-lg text-base leading-relaxed text-zinc-300 sm:text-lg">
-                The nights people actually show up for don&apos;t start at the door—they start when the flyer goes live.
+                The nights people actually show up for don&apos;t start at the door. They start when the flyer goes live.
                 Get a QR ticket in two taps, or publish your own night before someone else fills the calendar.
               </p>
               <div className="mt-10 flex flex-wrap justify-center gap-4">

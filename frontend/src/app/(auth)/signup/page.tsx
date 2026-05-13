@@ -219,7 +219,7 @@ function SignupForm() {
               </div>
               <p className="mt-2 flex gap-2 text-xs leading-relaxed text-zinc-500">
                 <Lock className="mt-0.5 h-3.5 w-3.5 shrink-0 text-zinc-600" aria-hidden />
-                <span>We&apos;ll send a short verification email—tap the link once, then you can log in.</span>
+                <span>We&apos;ll send a short verification email. Tap the link once, then you can log in.</span>
               </p>
             </div>
 

@@ -165,7 +165,7 @@ export function VerifyEduClient() {
                 </button>
                 <p className="mt-2 text-center text-xs text-zinc-500">Only .edu email addresses allowed.</p>
                 <p className="mt-2 text-center text-xs leading-relaxed text-zinc-500">
-                  We&apos;ll send a link—tap it in your inbox and you&apos;re in.
+                  We&apos;ll send a link. Tap it in your inbox and you&apos;re in.
                 </p>
               </div>
             </form>

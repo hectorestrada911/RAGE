@@ -10,11 +10,11 @@ export const metadata: Metadata = {
 const faqs: FaqAccordionItem[] = [
   {
     q: "How do I get into RAGE events?",
-    a: "Create an account, find your event, and check out in a few taps. Your QR lands in My tickets—turn brightness up at the door for a fast scan.",
+    a: "Create an account, find your event, and check out in a few taps. Your QR lands in My tickets. Turn brightness up at the door for a fast scan.",
   },
   {
     q: "Do I need a school email to use the app?",
-    a: "For student-gated events, hosts may require a verified .edu so private campus nights stay student-only. Other events may be open to any email—check the listing.",
+    a: "For student-gated events, hosts may require a verified .edu so private campus nights stay student-only. Other events may be open to any email. Check the listing.",
     id: "faq-edu-email",
   },
   {
@@ -64,7 +64,7 @@ export default function FaqPage() {
             questions
           </h1>
           <p className="mt-5 max-w-2xl text-sm leading-relaxed text-zinc-500 sm:text-base">
-            Tickets, door check-in, payouts, and access—before you buy or host.
+            Tickets, door check-in, payouts, and access. Before you buy or host.
           </p>
 
           <div className="mt-8 flex flex-wrap gap-2">
