@@ -59,27 +59,23 @@ const scenes = [
 /* Discover-style feed tokens (match product mock: black canvas, iOS-like cards, lime signal) */
 const DISCOVER_BG = "#000000";
 const DISCOVER_CARD = "#1c1c1e";
-const DISCOVER_SEARCH = "#2c2c2e";
 const SIGNAL = "#4BFA94";
 
 /* ─── phone screen 1: event feed (Discover) ─────────────────────── */
 function FeedScreen({ progress }: { progress: MotionValue<number> }) {
-  const tabs = ["Trending", "Near Me", ".edu Only", "Music", "Sports", "Art"];
-  const items = [
-    {
-      tag: "EVENT",
-      tc: SIGNAL,
-      tagBg: "rgba(75,250,148,0.22)",
-      title: "Campus Lights Fest",
-      meta: "Tonight · Main Stage",
-      going: 156,
-      img: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=300&q=70",
-    },
+  const reduceMotion = useReducedMotion();
+  const tabs = [
+    { label: "Tonight", active: true },
+    { label: "Near me", active: false },
+    { label: "Music", active: false },
+    { label: "Greek", active: false },
+  ];
+  const upcoming = [
     {
       tag: "PARTY",
       tc: "#facc15",
       tagBg: "rgba(250,204,21,0.18)",
-      title: "Pre-game @ Theta 🏠",
+      title: "Pre-game @ Theta",
       meta: "9PM · 2.3 mi away",
       going: 47,
       img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=300&q=70",
@@ -88,33 +84,22 @@ function FeedScreen({ progress }: { progress: MotionValue<number> }) {
       tag: "RAVE",
       tc: "#c084fc",
       tagBg: "rgba(192,132,252,0.18)",
-      title: "Rooftop DJ Set ✦",
+      title: "Rooftop DJ Set",
       meta: "Fri · Riverside Deck",
       going: 89,
       img: "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?auto=format&fit=crop&w=300&q=70",
     },
-    {
-      tag: ".EDU",
-      tc: SIGNAL,
-      tagBg: "rgba(75,250,148,0.22)",
-      title: "Sophomore Mixer",
-      meta: "Sat · Student Union",
-      going: 34,
-      img: "https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=300&q=70",
-    },
   ];
-  const y0 = useTransform(progress, [0.020, 0.120], [22, 0]);
-  const y1 = useTransform(progress, [0.045, 0.145], [22, 0]);
-  const y2 = useTransform(progress, [0.070, 0.170], [22, 0]);
-  const y3 = useTransform(progress, [0.095, 0.195], [22, 0]);
-  const yEdu = useTransform(progress, [0.080, 0.180], [18, 0]);
-  const oEdu = useTransform(progress, [0.080, 0.180], [0, 1]);
-  const o0 = useTransform(progress, [0.020, 0.120], [0, 1]);
-  const o1 = useTransform(progress, [0.045, 0.145], [0, 1]);
-  const o2 = useTransform(progress, [0.070, 0.170], [0, 1]);
-  const o3 = useTransform(progress, [0.095, 0.195], [0, 1]);
-  const cardYs = [y0, y1, y2, y3];
-  const cardOpacities = [o0, o1, o2, o3];
+
+  /* staggered entrance */
+  const heroY = useTransform(progress, [0.015, 0.115], [22, 0]);
+  const heroO = useTransform(progress, [0.015, 0.115], [0, 1]);
+  const y1 = useTransform(progress, [0.060, 0.160], [18, 0]);
+  const y2 = useTransform(progress, [0.085, 0.185], [18, 0]);
+  const o1 = useTransform(progress, [0.060, 0.160], [0, 1]);
+  const o2 = useTransform(progress, [0.085, 0.185], [0, 1]);
+  const cardYs = [y1, y2];
+  const cardOpacities = [o1, o2];
 
   return (
     <div
@@ -128,9 +113,12 @@ function FeedScreen({ progress }: { progress: MotionValue<number> }) {
       }}
     >
       {/* title row + avatar */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "2px 14px 10px" }}>
-        <span style={{ fontSize: 22, fontWeight: 900, letterSpacing: "-0.03em", color: "#fff" }}>Discover</span>
-        <div style={{ position: "relative", width: 32, height: 32, borderRadius: 999, overflow: "hidden", border: "1px solid rgba(255,255,255,0.14)" }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "2px 14px 8px" }}>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <span style={{ fontSize: 7, fontWeight: 800, letterSpacing: "0.18em", color: "#52525b", textTransform: "uppercase" }}>For you · NYU</span>
+          <span style={{ fontSize: 20, fontWeight: 900, letterSpacing: "-0.03em", color: "#fff", lineHeight: 1.05 }}>Discover</span>
+        </div>
+        <div style={{ position: "relative", width: 30, height: 30, borderRadius: 999, overflow: "hidden", border: "1px solid rgba(255,255,255,0.14)" }}>
           <div
             style={{
               width: "100%",
@@ -143,113 +131,226 @@ function FeedScreen({ progress }: { progress: MotionValue<number> }) {
               position: "absolute",
               right: 0,
               bottom: 0,
-              width: 10,
-              height: 10,
+              width: 9,
+              height: 9,
               borderRadius: "50%",
               background: SIGNAL,
               border: "2px solid #000",
-              boxShadow: "0 0 0 1px rgba(75,250,148,0.35)",
             }}
           />
         </div>
       </div>
 
-      {/* search + filter */}
-      <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "0 12px 10px" }}>
-        <div
-          style={{
-            flex: 1,
-            display: "flex",
-            alignItems: "center",
-            gap: 8,
-            background: DISCOVER_SEARCH,
-            borderRadius: 22,
-            padding: "9px 12px",
-            minWidth: 0,
-            border: "1px solid rgba(255,255,255,0.06)",
-          }}
-        >
-          <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="#737373" strokeWidth={2.4}>
-            <circle cx="11" cy="11" r="8" />
-            <path d="m21 21-4.35-4.35" />
-          </svg>
-          <span style={{ fontSize: 11, color: "#737373", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-            Search events near you...
-          </span>
-        </div>
-        <button
-          type="button"
-          aria-hidden
-          style={{
-            width: 38,
-            height: 38,
-            borderRadius: 12,
-            border: "1px solid rgba(255,255,255,0.08)",
-            background: DISCOVER_SEARCH,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            flexShrink: 0,
-          }}
-        >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#a3a3a3" strokeWidth={2}>
-            <path d="M4 6h16M7 12h10M10 18h4" />
-          </svg>
-        </button>
-      </div>
-
-      {/* scroll category tabs */}
+      {/* compact pill tabs */}
       <div
         className="no-scrollbar"
         style={{
           display: "flex",
-          gap: 18,
+          gap: 6,
           padding: "0 12px 8px",
           overflowX: "auto",
-          borderBottom: "1px solid rgba(255,255,255,0.08)",
           WebkitOverflowScrolling: "touch",
         }}
       >
-        {tabs.map((t, i) => (
+        {tabs.map((t) => (
           <span
-            key={t}
+            key={t.label}
             style={{
               flexShrink: 0,
-              fontSize: 11,
-              fontWeight: i === 0 ? 700 : 500,
-              color: i === 0 ? SIGNAL : "#52525b",
-              borderBottom: i === 0 ? `2px solid ${SIGNAL}` : "2px solid transparent",
-              paddingBottom: 6,
+              fontSize: 9,
+              fontWeight: 800,
+              letterSpacing: "0.04em",
+              color: t.active ? "#000" : "#a1a1aa",
+              background: t.active ? SIGNAL : "rgba(255,255,255,0.04)",
+              border: t.active ? "1px solid rgba(0,0,0,0)" : "1px solid rgba(255,255,255,0.08)",
+              padding: "5px 10px",
+              borderRadius: 999,
+              textTransform: "uppercase",
             }}
           >
-            {t}
+            {t.label}
           </span>
         ))}
       </div>
 
-      {/* scrollable list */}
-      <div className="no-scrollbar" style={{ flex: 1, minHeight: 0, overflowY: "auto", padding: "8px 12px 52px", display: "flex", flexDirection: "column", gap: 8 }}>
-        {items.map((item, i) => (
+      {/* scrollable area */}
+      <div className="no-scrollbar" style={{ flex: 1, minHeight: 0, overflowY: "auto", padding: "6px 12px 60px", display: "flex", flexDirection: "column", gap: 8 }}>
+        {/* HERO featured event card */}
+        <motion.div
+          style={{
+            y: heroY,
+            opacity: heroO,
+            position: "relative",
+            borderRadius: 18,
+            overflow: "hidden",
+            border: "1px solid rgba(255,255,255,0.08)",
+            boxShadow: "0 24px 50px -28px rgba(0,0,0,0.95), inset 0 1px 0 rgba(255,255,255,0.05)",
+            background: "#0a0a0a",
+            height: 196,
+            flexShrink: 0,
+          }}
+        >
+          <motion.div
+            style={{ position: "absolute", inset: 0 }}
+            animate={reduceMotion ? undefined : { scale: [1, 1.04, 1] }}
+            transition={reduceMotion ? undefined : { duration: 14, repeat: Infinity, ease: "easeInOut" }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element -- in-phone marketing still */}
+            <img
+              src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=600&q=80"
+              alt=""
+              width={600}
+              height={800}
+              style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 40%", display: "block" }}
+              decoding="async"
+            />
+          </motion.div>
+          <div
+            aria-hidden
+            style={{
+              position: "absolute",
+              inset: 0,
+              background:
+                "radial-gradient(ellipse 110% 70% at 50% -10%, rgba(75,250,148,0.18), transparent 50%), linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.35) 45%, transparent 72%)",
+              pointerEvents: "none",
+            }}
+          />
+
+          {/* Top chips */}
+          <div style={{ position: "absolute", top: 10, left: 10, right: 10, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+            <span
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 5,
+                padding: "4px 8px",
+                borderRadius: 999,
+                background: "rgba(0,0,0,0.55)",
+                border: "1px solid rgba(255,255,255,0.18)",
+                backdropFilter: "blur(6px)",
+                WebkitBackdropFilter: "blur(6px)",
+              }}
+            >
+              <motion.span
+                aria-hidden
+                style={{ width: 6, height: 6, borderRadius: "50%", background: SIGNAL, boxShadow: `0 0 8px ${SIGNAL}` }}
+                animate={reduceMotion ? undefined : { opacity: [0.5, 1, 0.5] }}
+                transition={reduceMotion ? undefined : { duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
+              />
+              <span style={{ fontSize: 7, fontWeight: 900, letterSpacing: "0.16em", color: "#fafafa", textTransform: "uppercase" }}>Live tonight</span>
+            </span>
+            <span
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 4,
+                padding: "4px 8px",
+                borderRadius: 999,
+                background: "rgba(0,0,0,0.5)",
+                border: "1px solid rgba(255,255,255,0.18)",
+                backdropFilter: "blur(6px)",
+                WebkitBackdropFilter: "blur(6px)",
+              }}
+              aria-hidden
+            >
+              <svg width="8" height="9" viewBox="0 0 24 24" fill="none" stroke="#fafafa" strokeWidth="2.2">
+                <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
+              </svg>
+            </span>
+          </div>
+
+          {/* Bottom content */}
+          <div style={{ position: "absolute", left: 12, right: 12, bottom: 12, display: "flex", flexDirection: "column", gap: 6 }}>
+            <span
+              style={{
+                alignSelf: "flex-start",
+                display: "inline-block",
+                background: "rgba(75,250,148,0.22)",
+                color: SIGNAL,
+                fontSize: 7,
+                fontWeight: 900,
+                textTransform: "uppercase",
+                letterSpacing: "0.12em",
+                borderRadius: 6,
+                padding: "3px 7px",
+              }}
+            >
+              Featured · Music
+            </span>
+            <p style={{ margin: 0, fontSize: 15, fontWeight: 900, letterSpacing: "-0.03em", color: "#fff", lineHeight: 1.05, textShadow: "0 2px 18px rgba(0,0,0,0.7)" }}>
+              Campus Lights Fest
+            </p>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
+              <p style={{ margin: 0, fontSize: 9, fontWeight: 600, color: "rgba(255,255,255,0.86)" }}>10:00 PM · Main Stage</p>
+              <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                <span style={{ display: "inline-flex", marginLeft: 0 }}>
+                  {[0, 1, 2].map((i) => (
+                    <span
+                      key={i}
+                      style={{
+                        width: 12,
+                        height: 12,
+                        borderRadius: "50%",
+                        background: ["#a78bfa", "#f472b6", "#60a5fa"][i],
+                        border: "1.5px solid #050505",
+                        marginLeft: i === 0 ? 0 : -4,
+                      }}
+                      aria-hidden
+                    />
+                  ))}
+                </span>
+                <span style={{ fontSize: 8, fontWeight: 700, color: "rgba(255,255,255,0.78)" }}>156 going</span>
+              </div>
+            </div>
+            <div
+              style={{
+                marginTop: 4,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 6,
+                borderRadius: 999,
+                padding: "8px 10px",
+                background: `linear-gradient(90deg, ${SIGNAL}, #7dffc0)`,
+                boxShadow: "0 12px 26px -14px rgba(75,250,148,0.55)",
+              }}
+            >
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#0a0a0a" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                <rect x="3" y="5" width="18" height="16" rx="2" />
+                <line x1="3" y1="10" x2="21" y2="10" />
+              </svg>
+              <span style={{ fontSize: 9, fontWeight: 900, letterSpacing: "0.08em", color: "#0a0a0a", textTransform: "uppercase" }}>Get ticket · $15</span>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Upcoming row label */}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingTop: 2 }}>
+          <span style={{ fontSize: 8, fontWeight: 900, letterSpacing: "0.16em", color: "#a1a1aa", textTransform: "uppercase" }}>Up next</span>
+          <span style={{ fontSize: 8, fontWeight: 700, color: "#52525b" }}>See all</span>
+        </div>
+
+        {upcoming.map((item, i) => (
           <motion.div
             key={i}
             style={{
               y: cardYs[i],
               opacity: cardOpacities[i],
               background: DISCOVER_CARD,
-              borderRadius: 16,
+              borderRadius: 14,
               padding: "9px 10px 9px 9px",
               display: "flex",
               alignItems: "center",
               gap: 9,
               border: "1px solid rgba(255,255,255,0.06)",
-              boxShadow: "0 12px 28px -18px rgba(0,0,0,0.85)",
+              boxShadow: "0 10px 22px -16px rgba(0,0,0,0.85)",
             }}
           >
             <div
               style={{
-                width: 44,
-                height: 44,
-                borderRadius: 12,
+                width: 42,
+                height: 42,
+                borderRadius: 10,
                 flexShrink: 0,
                 backgroundImage: `linear-gradient(160deg, rgba(0,0,0,0.12), rgba(0,0,0,0.42)), url(${item.img})`,
                 backgroundSize: "cover",
@@ -257,92 +358,31 @@ function FeedScreen({ progress }: { progress: MotionValue<number> }) {
                 border: "1px solid rgba(255,255,255,0.1)",
               }}
             />
-            <div style={{ flex: 1, minWidth: 0, position: "relative", paddingRight: 22 }}>
-              <div style={{ position: "absolute", top: -2, right: 0, color: "#52525b" }}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-                  <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
-                </svg>
-              </div>
+            <div style={{ flex: 1, minWidth: 0 }}>
               <span
                 style={{
                   display: "inline-block",
                   background: item.tagBg,
                   color: item.tc,
-                  fontSize: 8,
+                  fontSize: 7,
                   fontWeight: 800,
                   textTransform: "uppercase",
                   letterSpacing: "0.08em",
-                  borderRadius: 6,
-                  padding: "2px 6px",
+                  borderRadius: 5,
+                  padding: "2px 5px",
                 }}
               >
                 {item.tag}
               </span>
-              <p style={{ margin: "4px 0 2px", fontSize: 12, fontWeight: 700, color: "#fff", lineHeight: 1.25 }}>{item.title}</p>
-              <p style={{ fontSize: 10, color: "#737373" }}>{item.meta}</p>
+              <p style={{ margin: "3px 0 1px", fontSize: 11, fontWeight: 700, color: "#fff", lineHeight: 1.2 }}>{item.title}</p>
+              <p style={{ margin: 0, fontSize: 9, color: "#737373" }}>{item.meta}</p>
             </div>
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 2, flexShrink: 0, paddingRight: 2 }}>
-              <span style={{ fontSize: 12, fontWeight: 800, color: SIGNAL, letterSpacing: "-0.02em" }}>{item.going}</span>
-              <span style={{ fontSize: 8, fontWeight: 600, color: "#52525b", textTransform: "capitalize", letterSpacing: "0.04em" }}>Going</span>
-              <span style={{ marginTop: 2, color: "#3f3f46", fontSize: 11, lineHeight: 1 }} aria-hidden>
-                ›
-              </span>
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 1, flexShrink: 0 }}>
+              <span style={{ fontSize: 11, fontWeight: 900, color: SIGNAL, letterSpacing: "-0.02em" }}>{item.going}</span>
+              <span style={{ fontSize: 7, fontWeight: 700, color: "#52525b", textTransform: "uppercase", letterSpacing: "0.08em" }}>Going</span>
             </div>
           </motion.div>
         ))}
-
-        <motion.div
-          style={{
-            y: yEdu,
-            opacity: oEdu,
-            background: "linear-gradient(135deg, rgba(75,250,148,0.12) 0%, rgba(24,24,27,0.95) 55%)",
-            borderRadius: 16,
-            padding: "11px 12px",
-            display: "flex",
-            alignItems: "center",
-            gap: 10,
-            border: "1px solid rgba(75,250,148,0.22)",
-          }}
-        >
-          <div
-            style={{
-              width: 40,
-              height: 40,
-              borderRadius: 12,
-              background: "rgba(75,250,148,0.14)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: 20,
-              flexShrink: 0,
-            }}
-            aria-hidden
-          >
-            🎓
-          </div>
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <p style={{ margin: 0, fontSize: 11, fontWeight: 800, color: "#fff", letterSpacing: "-0.01em" }}>Tonight’s drop</p>
-            <p style={{ margin: "3px 0 0", fontSize: 9, color: "#a1a1aa", lineHeight: 1.35 }}>
-              RSVP in two taps — tickets land in My tickets with a live QR.
-            </p>
-          </div>
-          <span
-            style={{
-              flexShrink: 0,
-              fontSize: 9,
-              fontWeight: 800,
-              letterSpacing: "0.06em",
-              textTransform: "uppercase",
-              color: "#000",
-              background: SIGNAL,
-              borderRadius: 10,
-              padding: "8px 10px",
-              boxShadow: "0 8px 20px -8px rgba(75,250,148,0.55)",
-            }}
-          >
-            Open
-          </span>
-        </motion.div>
       </div>
 
       {/* bottom tab bar */}
@@ -493,14 +533,15 @@ function HostCreateEventPreviewScreen({ progress }: { progress: MotionValue<numb
         style={{
           flex: 1,
           minHeight: 0,
-          overflow: "hidden",
-          padding: "0 16px 16px",
+          overflowY: "auto",
+          overflowX: "hidden",
+          padding: "0 16px 78px",
           display: "flex",
           flexDirection: "column",
           gap: 10,
         }}
       >
-        {/* Cover */}
+        {/* Cover — vertical poster aspect, like a real flyer */}
         <motion.div
           style={{
             opacity: coverOpacity,
@@ -511,7 +552,8 @@ function HostCreateEventPreviewScreen({ progress }: { progress: MotionValue<numb
             border: `1px solid ${fieldBorder}`,
             boxShadow: "0 26px 50px -32px rgba(0,0,0,0.95), inset 0 1px 0 rgba(255,255,255,0.05)",
             background: "#0a0a0a",
-            height: 152,
+            height: 202,
+            flexShrink: 0,
           }}
         >
           <motion.div
@@ -707,46 +749,59 @@ function HostCreateEventPreviewScreen({ progress }: { progress: MotionValue<numb
           </div>
         </motion.div>
 
-        <motion.div style={{ opacity: footerOpacity, marginTop: "auto", paddingTop: 8 }}>
-          <div
+      </div>
+
+      {/* Sticky CTA pinned to bottom of phone */}
+      <motion.div
+        style={{
+          opacity: footerOpacity,
+          position: "absolute",
+          left: 0,
+          right: 0,
+          bottom: 12,
+          padding: "8px 16px 0",
+          background: "linear-gradient(to top, rgba(12,12,14,1) 35%, rgba(12,12,14,0))",
+          pointerEvents: "none",
+        }}
+      >
+        <div
+          style={{
+            position: "relative",
+            borderRadius: 14,
+            overflow: "hidden",
+            background: `linear-gradient(90deg, ${SIGNAL}, #7dffc0)`,
+            boxShadow: "0 18px 36px -14px rgba(75,250,148,0.55)",
+          }}
+        >
+          <span
             style={{
-              position: "relative",
-              borderRadius: 14,
-              overflow: "hidden",
-              background: `linear-gradient(90deg, ${SIGNAL}, #7dffc0)`,
-              boxShadow: "0 18px 36px -14px rgba(75,250,148,0.55)",
+              display: "block",
+              padding: "11px 12px",
+              textAlign: "center",
+              fontSize: 10,
+              fontWeight: 900,
+              letterSpacing: "0.06em",
+              textTransform: "uppercase",
+              color: "#0a0a0a",
             }}
           >
-            <span
-              style={{
-                display: "block",
-                padding: "11px 12px",
-                textAlign: "center",
-                fontSize: 10,
-                fontWeight: 900,
-                letterSpacing: "0.06em",
-                textTransform: "uppercase",
-                color: "#0a0a0a",
-              }}
-            >
-              Continue → tickets
-            </span>
-            <motion.div
-              aria-hidden
-              style={{
-                position: "absolute",
-                top: 0,
-                bottom: 0,
-                width: 44,
-                background: "linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.32), rgba(255,255,255,0))",
-                transform: "skewX(-16deg)",
-              }}
-              animate={reduceMotion ? undefined : { x: [-50, 240] }}
-              transition={reduceMotion ? undefined : { duration: 3.2, repeat: Infinity, ease: "linear", repeatDelay: 1 }}
-            />
-          </div>
-        </motion.div>
-      </div>
+            Continue → tickets
+          </span>
+          <motion.div
+            aria-hidden
+            style={{
+              position: "absolute",
+              top: 0,
+              bottom: 0,
+              width: 44,
+              background: "linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.32), rgba(255,255,255,0))",
+              transform: "skewX(-16deg)",
+            }}
+            animate={reduceMotion ? undefined : { x: [-50, 240] }}
+            transition={reduceMotion ? undefined : { duration: 3.2, repeat: Infinity, ease: "linear", repeatDelay: 1 }}
+          />
+        </div>
+      </motion.div>
     </div>
   );
 }
