@@ -634,9 +634,7 @@ export function HomeAppShowcase() {
         >
           <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-[#4BFA94]">Run the room</p>
           <h2 className="mt-4 text-5xl font-black uppercase leading-[0.88] tracking-[-0.05em] text-white sm:text-6xl lg:text-7xl">
-            From flyer
-            <br />
-            to door.
+            RAGE.
           </h2>
           <p className="mx-auto mt-5 max-w-md text-base leading-relaxed text-zinc-400">
             Sell tickets in a tap. Scan check-ins live. Watch the night fund itself. Built for college nights, free to download.
