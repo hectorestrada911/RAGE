@@ -397,18 +397,47 @@ function FeedScreen({ progress }: { progress: MotionValue<number> }) {
   );
 }
 
-/* ─── phone screen 2: what invitees see when they open your public link (/events/…) ─ */
-function GuestEventLinkPreviewScreen({ progress }: { progress: MotionValue<number> }) {
+/* ─── phone screen 2: Create Event flow (polished host editor — like step 2/4) ─ */
+function HostCreateEventPreviewScreen({ progress }: { progress: MotionValue<number> }) {
   const reduceMotion = useReducedMotion();
   const wrapOpacity = useTransform(progress, [0.30, 0.42], [0, 1]);
   const wrapY = useTransform(progress, [0.32, 0.46], [18, 0]);
   const SIGNAL = "#4BFA94";
+  const fieldBg = "#141416";
+  const fieldBorder = "rgba(255,255,255,0.08)";
 
   return (
-    <div style={{ position: "absolute", inset: 0, background: "#030303", paddingTop: 52, display: "flex", flexDirection: "column" }}>
-      <div style={{ flexShrink: 0, padding: "2px 14px 6px" }}>
-        <span aria-hidden style={{ display: "inline-flex", color: "#a3a3a3", fontSize: 22, lineHeight: 1, fontWeight: 300 }}>
+    <div style={{ position: "absolute", inset: 0, background: "#000", paddingTop: 52, display: "flex", flexDirection: "column" }}>
+      {/* App bar — matches create-event header pattern */}
+      <div
+        style={{
+          flexShrink: 0,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "2px 14px 10px",
+        }}
+      >
+        <span aria-hidden style={{ color: "#d4d4d8", fontSize: 22, lineHeight: 1, fontWeight: 300, width: 28 }}>
           ‹
+        </span>
+        <span style={{ fontSize: 13, fontWeight: 800, letterSpacing: "-0.02em", color: "#fafafa" }}>Create Event</span>
+        <span
+          aria-hidden
+          style={{
+            width: 26,
+            height: 26,
+            borderRadius: "50%",
+            background: SIGNAL,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            boxShadow: "0 0 18px -4px rgba(75,250,148,0.55)",
+          }}
+        >
+          <svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden>
+            <path d="M1 5.2L4.2 8.4L11 1" stroke="#000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
         </span>
       </div>
 
@@ -418,7 +447,7 @@ function GuestEventLinkPreviewScreen({ progress }: { progress: MotionValue<numbe
           flex: 1,
           minHeight: 0,
           overflow: "auto",
-          padding: "0 12px 14px",
+          padding: "0 14px 16px",
           display: "flex",
           flexDirection: "column",
         }}
@@ -427,69 +456,35 @@ function GuestEventLinkPreviewScreen({ progress }: { progress: MotionValue<numbe
           style={{
             display: "flex",
             flexDirection: "column",
+            gap: 10,
             flex: "0 0 auto",
             opacity: wrapOpacity,
             y: wrapY,
           }}
         >
-          {/* Fake URL bar — matches what hosts copy from the dashboard */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
-              marginBottom: 10,
-              borderRadius: 12,
-              border: "1px solid rgba(255,255,255,0.1)",
-              background: "rgba(0,0,0,0.55)",
-              padding: "7px 10px",
-            }}
-          >
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#71717a" strokeWidth="2" aria-hidden>
-              <rect x="5" y="11" width="14" height="10" rx="2" />
-              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-            </svg>
-            <span
-              style={{
-                flex: 1,
-                minWidth: 0,
-                fontSize: 9,
-                fontFamily: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
-                color: "#a1a1aa",
-                letterSpacing: "-0.02em",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-              }}
-            >
-              rage.events/events/soho-welcome
-            </span>
-          </div>
-
-          {/* Hero card — same structure as guest event poster */}
           <div
             style={{
               position: "relative",
-              borderRadius: 18,
+              borderRadius: 22,
               overflow: "hidden",
-              border: "1px solid rgba(255,255,255,0.1)",
-              boxShadow: "0 24px 48px -28px rgba(0,0,0,0.85)",
+              border: `1px solid ${fieldBorder}`,
+              boxShadow: "0 28px 56px -32px rgba(0,0,0,0.9)",
               background: "#0a0a0a",
             }}
           >
-            <div style={{ position: "relative", height: 148 }}>
+            <div style={{ position: "relative", height: 162 }}>
               <motion.div
                 style={{ position: "absolute", inset: 0 }}
-                animate={reduceMotion ? undefined : { scale: [1, 1.04, 1] }}
-                transition={reduceMotion ? undefined : { duration: 12, repeat: Infinity, ease: "easeInOut" }}
+                animate={reduceMotion ? undefined : { scale: [1, 1.03, 1] }}
+                transition={reduceMotion ? undefined : { duration: 11, repeat: Infinity, ease: "easeInOut" }}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element -- in-phone marketing still */}
                 <img
                   src="/marketing-live-event.png"
-                  alt="Sample guest event page"
+                  alt="Event cover preview while creating an event"
                   width={800}
                   height={1200}
-                  style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 40%", display: "block" }}
+                  style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 38%", display: "block" }}
                   decoding="async"
                 />
               </motion.div>
@@ -498,147 +493,78 @@ function GuestEventLinkPreviewScreen({ progress }: { progress: MotionValue<numbe
                 style={{
                   position: "absolute",
                   inset: 0,
-                  background:
-                    "radial-gradient(ellipse 100% 70% at 50% -10%, rgba(75,250,148,0.16), transparent 48%), linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.35) 45%, transparent 72%)",
+                  background: "linear-gradient(to top, rgba(0,0,0,0.35) 0%, transparent 55%)",
                   pointerEvents: "none",
                 }}
               />
-
-              <div
-                style={{
-                  position: "absolute",
-                  left: 10,
-                  right: 10,
-                  bottom: 10,
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 6,
-                }}
-              >
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
-                  <span
-                    style={{
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: 5,
-                      borderRadius: 999,
-                      border: "1px solid rgba(255,255,255,0.2)",
-                      background: "rgba(0,0,0,0.45)",
-                      padding: "3px 8px",
-                      fontSize: 7,
-                      fontWeight: 800,
-                      letterSpacing: "0.12em",
-                      color: "rgba(255,255,255,0.9)",
-                      textTransform: "uppercase",
-                    }}
-                  >
-                    <span style={{ display: "inline-flex", height: 5, width: 5, borderRadius: "50%", background: SIGNAL }} aria-hidden />
-                    Live on RAGE
-                  </span>
-                  <span
-                    style={{
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: 4,
-                      borderRadius: 999,
-                      border: "1px solid rgba(255,255,255,0.2)",
-                      background: "rgba(0,0,0,0.4)",
-                      padding: "3px 8px",
-                      fontSize: 7,
-                      fontWeight: 800,
-                      letterSpacing: "0.1em",
-                      color: "rgba(255,255,255,0.82)",
-                      textTransform: "uppercase",
-                    }}
-                  >
-                    <span style={{ color: SIGNAL }} aria-hidden>
-                      ✦
-                    </span>
-                    Hosted by RAGE
-                  </span>
-                </div>
-                <h3
-                  style={{
-                    margin: 0,
-                    fontSize: 15,
-                    fontWeight: 900,
-                    letterSpacing: "-0.04em",
-                    lineHeight: 1.05,
-                    color: "#fff",
-                    textShadow: "0 2px 18px rgba(0,0,0,0.75)",
-                  }}
-                >
-                  SoHo welcome back
-                </h3>
-                <p style={{ margin: 0, fontSize: 9, fontWeight: 600, color: "rgba(255,255,255,0.88)" }}>
-                  Friday, Aug 29 · 10PM – 2AM
-                </p>
-              </div>
-            </div>
-
-            <div style={{ padding: "10px 10px 12px", background: "linear-gradient(to bottom, #050505, #080808)" }}>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
-                <span
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: 5,
-                    borderRadius: 999,
-                    padding: "7px 11px",
-                    fontSize: 8,
-                    fontWeight: 800,
-                    letterSpacing: "0.06em",
-                    textTransform: "uppercase",
-                    color: "#000",
-                    background: `linear-gradient(90deg, ${SIGNAL}, #7dffc0)`,
-                    boxShadow: "0 0 20px -6px rgba(75,250,148,0.55)",
-                  }}
-                >
-                  Share drop
-                </span>
-                <span
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: 5,
-                    borderRadius: 999,
-                    border: "1px solid rgba(255,255,255,0.22)",
-                    background: "rgba(255,255,255,0.06)",
-                    padding: "7px 11px",
-                    fontSize: 8,
-                    fontWeight: 800,
-                    letterSpacing: "0.06em",
-                    textTransform: "uppercase",
-                    color: "#f4f4f5",
-                  }}
-                >
-                  Copy link
-                </span>
-              </div>
-              <div
-                style={{
-                  marginTop: 10,
-                  borderRadius: 999,
-                  padding: "10px 12px",
-                  textAlign: "center",
-                  fontSize: 9,
-                  fontWeight: 900,
-                  letterSpacing: "0.04em",
-                  textTransform: "uppercase",
-                  color: "#0a0a0a",
-                  background: "linear-gradient(180deg, #f4f4f5 0%, #e4e4e7 100%)",
-                  boxShadow: "0 12px 28px -12px rgba(0,0,0,0.5)",
-                }}
-              >
-                Buy tickets
-              </div>
-              <p style={{ margin: "8px 0 0", textAlign: "center", fontSize: 7, lineHeight: 1.45, color: "#71717a" }}>
-                Same page everyone opens from your invite link — not a login wall.
-              </p>
             </div>
           </div>
+
+          <div
+            style={{
+              borderRadius: 16,
+              border: `1px solid ${fieldBorder}`,
+              background: fieldBg,
+              padding: "11px 13px",
+            }}
+          >
+            <p style={{ margin: 0, fontSize: 8, fontWeight: 700, letterSpacing: "0.14em", color: "#71717a", textTransform: "uppercase" }}>
+              Title
+            </p>
+            <p style={{ margin: "5px 0 0", fontSize: 14, fontWeight: 800, letterSpacing: "-0.03em", color: "#fafafa" }}>Soho welcome back</p>
+          </div>
+
+          <div
+            style={{
+              borderRadius: 16,
+              border: `1px solid ${fieldBorder}`,
+              background: fieldBg,
+              padding: "13px 13px",
+            }}
+          >
+            <p style={{ margin: 0, fontSize: 12, fontWeight: 600, color: "#52525b" }}>Add host *</p>
+          </div>
+
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 2 }}>
+            <span
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                borderRadius: 999,
+                border: `1px solid ${SIGNAL}`,
+                background: "rgba(75,250,148,0.08)",
+                padding: "5px 11px",
+                fontSize: 8,
+                fontWeight: 800,
+                letterSpacing: "0.12em",
+                color: SIGNAL,
+                textTransform: "uppercase",
+              }}
+            >
+              Draft saved
+            </span>
+            <span
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                borderRadius: 999,
+                border: "1px solid rgba(255,255,255,0.14)",
+                background: "rgba(255,255,255,0.03)",
+                padding: "5px 11px",
+                fontSize: 8,
+                fontWeight: 800,
+                letterSpacing: "0.12em",
+                color: "#a1a1aa",
+                textTransform: "uppercase",
+              }}
+            >
+              Step 2/4
+            </span>
+          </div>
+
+          <p style={{ margin: "4px 0 0", fontSize: 8, lineHeight: 1.5, color: "#52525b", textAlign: "center" }}>
+            Flyer, price, and guest link — one calm flow before you hit publish.
+          </p>
         </motion.div>
       </div>
     </div>
@@ -1134,7 +1060,7 @@ export function HomeTopSection() {
                   <FeedScreen progress={progress} />
                 </motion.div>
                 <motion.div style={{ opacity: phoneOps[1], position: "absolute", inset: 0, willChange: "opacity", transform: "translateZ(0)" }}>
-                  <GuestEventLinkPreviewScreen progress={progress} />
+                  <HostCreateEventPreviewScreen progress={progress} />
                 </motion.div>
                 <motion.div style={{ opacity: phoneOps[2], position: "absolute", inset: 0, willChange: "opacity", transform: "translateZ(0)" }}>
                   <TicketScreen progress={progress} />
