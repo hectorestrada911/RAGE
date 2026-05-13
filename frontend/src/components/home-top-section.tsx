@@ -7,6 +7,7 @@ import {
   AnimatePresence,
   useScroll,
   useTransform,
+  useMotionValueEvent,
   useReducedMotion,
   type MotionValue,
 } from "framer-motion";
@@ -31,7 +32,7 @@ const scenes = [
     cycleWords: ["Your night.", "Your vibe.", "Your scene."],
     body: "Every party, show, and event near you, curated by students, for students.",
     leftTag: "BUILT FOR\nCOLLEGE NIGHTS",
-    rightTag: "TRUSTED AT\n500+ CAMPUSES",
+    rightTag: "WHERE IT\nDROPS FIRST",
     cta: { label: "Sample event", href: "/demo" },
   },
   {
@@ -787,6 +788,20 @@ export function HomeTopSection() {
     { clamp: true }
   );
 
+  /** Stacked scene columns share one screen position; only the visible scene should receive clicks. */
+  function sceneIndexFromScrollProgress(v: number) {
+    if (v < 0.29) return 0;
+    if (v < 0.61) return 1;
+    return 2;
+  }
+  const [pointerScene, setPointerScene] = useState(0);
+  useLayoutEffect(() => {
+    setPointerScene(sceneIndexFromScrollProgress(progress.get()));
+  }, [progress, sectionTop, sectionRange]);
+  useMotionValueEvent(progress, "change", (v) => {
+    setPointerScene(sceneIndexFromScrollProgress(v));
+  });
+
   /* scene fades */
   const s1 = useTransform(progress, [0, 0.20, 0.30], [1, 1, 0]);
   const s2 = useTransform(progress, [0.24, 0.34, 0.54, 0.64], [0, 1, 1, 0]);
@@ -861,8 +876,11 @@ export function HomeTopSection() {
             {scenes.map((scene, i) => (
               <motion.div
                 key={scene.eyebrow}
-                className="pointer-events-auto absolute inset-x-0 top-0 flex flex-col items-center text-center"
-                style={{ opacity: sceneOps[i] }}
+                className="absolute inset-x-0 top-0 flex flex-col items-center text-center"
+                style={{
+                  opacity: sceneOps[i],
+                  pointerEvents: pointerScene === i ? "auto" : "none",
+                }}
               >
                 <p className="text-[10px] font-bold uppercase tracking-[0.26em] text-[#4BFA94]">{scene.eyebrow}</p>
                 <h2 className="mt-1.5 text-2xl font-black uppercase leading-[0.92] tracking-[-0.03em] text-white sm:text-3xl">
@@ -890,8 +908,11 @@ export function HomeTopSection() {
             {scenes.map((scene, i) => (
               <motion.div
                 key={`dt-${scene.eyebrow}`}
-                className="pointer-events-auto absolute inset-x-0 top-0 flex flex-col items-center text-center"
-                style={{ opacity: sceneOps[i] }}
+                className="absolute inset-x-0 top-0 flex flex-col items-center text-center"
+                style={{
+                  opacity: sceneOps[i],
+                  pointerEvents: pointerScene === i ? "auto" : "none",
+                }}
               >
                 <p className="text-[10px] font-bold uppercase tracking-[0.26em] text-[#4BFA94]">{scene.eyebrow}</p>
                 <h2 className="mt-1 text-xl font-black uppercase leading-[0.95] tracking-[-0.03em] text-white sm:text-2xl">
@@ -938,13 +959,21 @@ export function HomeTopSection() {
           <p className="mt-5 max-w-[280px] text-sm leading-relaxed text-zinc-500">
             Every party, show, and event near you, curated by students, for students.
           </p>
-          <Link
-            href="/create-event"
-            className="mt-7 inline-flex h-12 items-center rounded-full bg-[#4BFA94] px-8 text-[11px] font-bold uppercase tracking-[0.16em] text-black transition hover:bg-emerald-300"
-            style={{ boxShadow: "0 0 32px -6px rgba(75,250,148,0.6)" }}
-          >
-            Create event
-          </Link>
+          <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
+            <Link
+              href="/signup"
+              className="inline-flex h-12 items-center rounded-full bg-[#4BFA94] px-8 text-[11px] font-bold uppercase tracking-[0.16em] text-black transition hover:bg-emerald-300"
+              style={{ boxShadow: "0 0 32px -6px rgba(75,250,148,0.6)" }}
+            >
+              Register
+            </Link>
+            <Link
+              href="/create-event"
+              className="inline-flex h-12 items-center rounded-full border border-white/20 bg-white/[0.04] px-7 text-[11px] font-bold uppercase tracking-[0.14em] text-white transition hover:border-white/35 hover:bg-white/[0.07]"
+            >
+              Create event
+            </Link>
+          </div>
         </motion.div>
 
         {/* ── LEFT SIDE TEXT ── */}
@@ -958,6 +987,7 @@ export function HomeTopSection() {
                   position: i === 0 ? "relative" : "absolute",
                   top: i === 0 ? "auto" : 0,
                   left: i === 0 ? "auto" : 0,
+                  pointerEvents: pointerScene === i ? "auto" : "none",
                 }}
               >
                 <p className="text-[10px] font-bold uppercase tracking-[0.26em] text-[#4BFA94]">
