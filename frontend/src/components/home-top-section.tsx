@@ -12,7 +12,6 @@ import {
   type MotionValue,
 } from "framer-motion";
 import AnimatedTextCycle from "@/components/ui/animated-text-cycle";
-import { EduVerifyShieldIcon } from "@/components/edu-verify-shield-icon";
 
 const cyclingPhrases = [
   "Your night.",
@@ -398,192 +397,120 @@ function FeedScreen({ progress }: { progress: MotionValue<number> }) {
   );
 }
 
-/* ─── phone screen 2: register / host (marketing mock) ─ */
-function RegisterScreen({ progress }: { progress: MotionValue<number> }) {
+/* ─── phone screen 2: real event moment (flyer energy, not a signup form) ─ */
+function EventMomentScreen({ progress }: { progress: MotionValue<number> }) {
   const reduceMotion = useReducedMotion();
-  const badgeScale = useTransform(progress, [0.32, 0.46], [0.6, 1]);
-  const badgeOpacity = useTransform(progress, [0.32, 0.42], [0, 1]);
-  const titleY = useTransform(progress, [0.36, 0.48], [14, 0]);
-  const titleOpacity = useTransform(progress, [0.36, 0.46], [0, 1]);
-  const formY = useTransform(progress, [0.42, 0.54], [18, 0]);
-  const formOpacity = useTransform(progress, [0.42, 0.52], [0, 1]);
-  const whyOpacity = useTransform(progress, [0.46, 0.58], [0, 1]);
-  const whyY = useTransform(progress, [0.46, 0.58], [12, 0]);
-
-  const muted = "#737373";
-  const card = "#1c1c1e";
+  const wrapOpacity = useTransform(progress, [0.30, 0.42], [0, 1]);
+  const wrapY = useTransform(progress, [0.32, 0.46], [18, 0]);
+  const captionOpacity = useTransform(progress, [0.42, 0.55], [0, 1]);
+  const captionY = useTransform(progress, [0.42, 0.55], [10, 0]);
 
   return (
-    <div style={{ position: "absolute", inset: 0, background: "#000", paddingTop: 56, display: "flex", flexDirection: "column" }}>
+    <div style={{ position: "absolute", inset: 0, background: "#000", paddingTop: 52, display: "flex", flexDirection: "column" }}>
       <div style={{ flexShrink: 0, padding: "2px 14px 6px" }}>
         <span aria-hidden style={{ display: "inline-flex", color: "#a3a3a3", fontSize: 22, lineHeight: 1, fontWeight: 300 }}>
           ‹
         </span>
       </div>
 
-      <div className="no-scrollbar" style={{ flex: 1, minHeight: 0, overflowY: "auto", padding: "0 14px 20px" }}>
+      <div className="no-scrollbar" style={{ flex: 1, minHeight: 0, overflow: "hidden", padding: "0 14px 18px", display: "flex", flexDirection: "column" }}>
         <motion.div
           style={{
+            flex: 1,
+            minHeight: 0,
             display: "flex",
-            justifyContent: "center",
-            scale: badgeScale,
-            opacity: badgeOpacity,
-            marginBottom: 6,
-            marginTop: 4,
+            flexDirection: "column",
+            opacity: wrapOpacity,
+            y: wrapY,
           }}
         >
-          <motion.div
+          <p
             style={{
-              width: 62,
-              height: 62,
-              borderRadius: 18,
-              background: "rgba(75,250,148,0.08)",
-              border: "1px solid rgba(75,250,148,0.28)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              boxShadow: "0 0 24px rgba(75,250,148,0.16)",
-            }}
-            animate={reduceMotion ? undefined : { scale: [1, 1.03, 1] }}
-            transition={reduceMotion ? undefined : { duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
-          >
-            <EduVerifyShieldIcon size={40} />
-          </motion.div>
-        </motion.div>
-
-        <motion.p style={{ opacity: titleOpacity, y: titleY, margin: 0, textAlign: "center", fontSize: 9, fontWeight: 700, letterSpacing: "0.16em", color: "#4BFA94", textTransform: "uppercase" }}>
-          Host tools
-        </motion.p>
-        <motion.h2
-          style={{
-            opacity: titleOpacity,
-            y: titleY,
-            margin: "8px 0 0",
-            textAlign: "center",
-            fontSize: 17,
-            fontWeight: 900,
-            letterSpacing: "-0.03em",
-            color: "#fff",
-            lineHeight: 1.15,
-          }}
-        >
-          Create your first night
-        </motion.h2>
-        <motion.p style={{ opacity: titleOpacity, y: titleY, margin: "6px 0 0", textAlign: "center", fontSize: 10, color: "#9ca3af", lineHeight: 1.4 }}>
-          Flyer, tickets, and QR check-in — one polished flow.
-        </motion.p>
-
-        <motion.div style={{ opacity: formOpacity, y: formY, marginTop: 12, width: "100%" }}>
-          <p style={{ margin: "0 0 5px", fontSize: 10, fontWeight: 600, color: "#a1a1aa" }}>Email</p>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 10,
-              background: card,
-              border: "1px solid rgba(75,250,148,0.35)",
-              borderRadius: 14,
-              padding: "11px 12px",
-              boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.04), 0 0 18px rgba(75,250,148,0.12)",
+              margin: "0 0 8px",
+              textAlign: "center",
+              fontSize: 8,
+              fontWeight: 800,
+              letterSpacing: "0.18em",
+              color: "#4BFA94",
+              textTransform: "uppercase",
             }}
           >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={muted} strokeWidth="2" aria-hidden>
-              <rect x="3" y="5" width="18" height="14" rx="2" />
-              <path d="M3 7l9 6 9-6" />
-            </svg>
-            <span style={{ fontSize: 11, color: "#71717a" }}>you@email.com</span>
-          </div>
-          <p style={{ margin: "6px 0 0", display: "flex", alignItems: "center", gap: 5, fontSize: 8, color: "#737373", lineHeight: 1.35 }}>
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#52525b" strokeWidth="2" style={{ flexShrink: 0 }} aria-hidden>
-              <rect x="5" y="11" width="14" height="10" rx="2" />
-              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-            </svg>
-            <span>We&apos;ll email a link—no spam.</span>
+            On RAGE nights look like this
           </p>
 
-          <div style={{ position: "relative", marginTop: 10, borderRadius: 14, overflow: "hidden", background: "#4BFA94", boxShadow: "0 12px 28px rgba(75,250,148,0.28)" }}>
-            <span
-              style={{
-                position: "relative",
-                zIndex: 2,
-                display: "block",
-                padding: "11px 12px",
-                textAlign: "center",
-                fontSize: 10,
-                fontWeight: 800,
-                letterSpacing: "0.02em",
-                color: "#000",
-              }}
-            >
-              Create account
-            </span>
+          <div
+            style={{
+              position: "relative",
+              flex: 1,
+              minHeight: 120,
+              borderRadius: 18,
+              overflow: "hidden",
+              border: "2px solid rgba(75,250,148,0.85)",
+              boxShadow: "0 0 36px rgba(75,250,148,0.22), inset 0 0 0 1px rgba(255,255,255,0.06)",
+              background: "#0a0a0a",
+            }}
+          >
             <motion.div
+              style={{ position: "absolute", inset: 0 }}
+              animate={reduceMotion ? undefined : { scale: [1, 1.05, 1] }}
+              transition={reduceMotion ? undefined : { duration: 14, repeat: Infinity, ease: "easeInOut" }}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element -- in-phone marketing still; avoids layout shift in scroll mock */}
+              <img
+                src="/marketing-live-event.png"
+                alt="Crowd and lights at a live college event"
+                width={800}
+                height={1200}
+                style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 42%", display: "block" }}
+                decoding="async"
+              />
+            </motion.div>
+            <div
               aria-hidden
               style={{
                 position: "absolute",
-                top: 0,
-                bottom: 0,
-                width: 48,
-                background: "linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.28), rgba(255,255,255,0))",
-                transform: "skewX(-16deg)",
+                inset: 0,
+                background: "linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 42%)",
+                pointerEvents: "none",
               }}
-              animate={reduceMotion ? undefined : { x: [-60, 220] }}
-              transition={reduceMotion ? undefined : { duration: 3, repeat: Infinity, ease: "linear", repeatDelay: 1 }}
             />
-          </div>
-        </motion.div>
-
-        <motion.div style={{ opacity: whyOpacity, y: whyY, marginTop: 12 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
-            <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.1)" }} />
-            <span style={{ fontSize: 7, fontWeight: 700, letterSpacing: "0.12em", color: "#737373", textTransform: "uppercase", whiteSpace: "nowrap" }}>
-              Why RAGE
-            </span>
-            <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.1)" }} />
-          </div>
-          {[
-            {
-              icon: (
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-              ),
-              title: "One account",
-              body: "Tickets, payouts, and door tools together.",
-            },
-            {
-              icon: (
-                <>
-                  <rect x="5" y="11" width="14" height="10" rx="2" />
-                  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                </>
-              ),
-              title: "Live QR check-in",
-              body: "Scan fast at the door—no screenshots.",
-            },
-          ].map((row) => (
-            <div key={row.title} style={{ display: "flex", gap: 8, marginBottom: 8 }}>
-              <div
-                style={{
-                  width: 26,
-                  height: 26,
-                  borderRadius: 8,
-                  background: "rgba(255,255,255,0.05)",
-                  border: "1px solid rgba(255,255,255,0.08)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  flexShrink: 0,
-                }}
-              >
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#4BFA94" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-                  {row.icon}
-                </svg>
-              </div>
-              <div style={{ minWidth: 0 }}>
-                <p style={{ margin: 0, fontSize: 9, fontWeight: 700, color: "#fafafa" }}>{row.title}</p>
-                <p style={{ margin: "2px 0 0", fontSize: 8, color: "#737373", lineHeight: 1.3 }}>{row.body}</p>
-              </div>
+            <div
+              style={{
+                position: "absolute",
+                top: 10,
+                right: 10,
+                width: 26,
+                height: 26,
+                borderRadius: "50%",
+                background: "rgba(75,250,148,0.95)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                boxShadow: "0 4px 14px rgba(0,0,0,0.45)",
+              }}
+              aria-hidden
+            >
+              <svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden>
+                <path d="M1 5.2L4.2 8.4L11 1" stroke="#000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
             </div>
-          ))}
+          </div>
+
+          <motion.p
+            style={{
+              opacity: captionOpacity,
+              y: captionY,
+              margin: "10px 0 0",
+              textAlign: "center",
+              fontSize: 9,
+              fontWeight: 600,
+              color: "#d4d4d8",
+              lineHeight: 1.45,
+              letterSpacing: "-0.01em",
+            }}
+          >
+            Your flyer isn&apos;t a PDF in a group chat—it&apos;s the night people actually pull up to.
+          </motion.p>
         </motion.div>
       </div>
     </div>
@@ -1079,7 +1006,7 @@ export function HomeTopSection() {
                   <FeedScreen progress={progress} />
                 </motion.div>
                 <motion.div style={{ opacity: phoneOps[1], position: "absolute", inset: 0, willChange: "opacity", transform: "translateZ(0)" }}>
-                  <RegisterScreen progress={progress} />
+                  <EventMomentScreen progress={progress} />
                 </motion.div>
                 <motion.div style={{ opacity: phoneOps[2], position: "absolute", inset: 0, willChange: "opacity", transform: "translateZ(0)" }}>
                   <TicketScreen progress={progress} />
