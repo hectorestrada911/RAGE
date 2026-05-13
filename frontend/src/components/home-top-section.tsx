@@ -397,120 +397,248 @@ function FeedScreen({ progress }: { progress: MotionValue<number> }) {
   );
 }
 
-/* ─── phone screen 2: real event moment (flyer energy, not a signup form) ─ */
-function EventMomentScreen({ progress }: { progress: MotionValue<number> }) {
+/* ─── phone screen 2: what invitees see when they open your public link (/events/…) ─ */
+function GuestEventLinkPreviewScreen({ progress }: { progress: MotionValue<number> }) {
   const reduceMotion = useReducedMotion();
   const wrapOpacity = useTransform(progress, [0.30, 0.42], [0, 1]);
   const wrapY = useTransform(progress, [0.32, 0.46], [18, 0]);
-  const captionOpacity = useTransform(progress, [0.42, 0.55], [0, 1]);
-  const captionY = useTransform(progress, [0.42, 0.55], [10, 0]);
+  const SIGNAL = "#4BFA94";
 
   return (
-    <div style={{ position: "absolute", inset: 0, background: "#000", paddingTop: 52, display: "flex", flexDirection: "column" }}>
+    <div style={{ position: "absolute", inset: 0, background: "#030303", paddingTop: 52, display: "flex", flexDirection: "column" }}>
       <div style={{ flexShrink: 0, padding: "2px 14px 6px" }}>
         <span aria-hidden style={{ display: "inline-flex", color: "#a3a3a3", fontSize: 22, lineHeight: 1, fontWeight: 300 }}>
           ‹
         </span>
       </div>
 
-      <div className="no-scrollbar" style={{ flex: 1, minHeight: 0, overflow: "hidden", padding: "0 14px 18px", display: "flex", flexDirection: "column" }}>
+      <div
+        className="no-scrollbar"
+        style={{
+          flex: 1,
+          minHeight: 0,
+          overflow: "auto",
+          padding: "0 12px 14px",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
         <motion.div
           style={{
-            flex: 1,
-            minHeight: 0,
             display: "flex",
             flexDirection: "column",
+            flex: "0 0 auto",
             opacity: wrapOpacity,
             y: wrapY,
           }}
         >
-          <p
+          {/* Fake URL bar — matches what hosts copy from the dashboard */}
+          <div
             style={{
-              margin: "0 0 8px",
-              textAlign: "center",
-              fontSize: 8,
-              fontWeight: 800,
-              letterSpacing: "0.18em",
-              color: "#4BFA94",
-              textTransform: "uppercase",
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              marginBottom: 10,
+              borderRadius: 12,
+              border: "1px solid rgba(255,255,255,0.1)",
+              background: "rgba(0,0,0,0.55)",
+              padding: "7px 10px",
             }}
           >
-            On RAGE nights look like this
-          </p>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#71717a" strokeWidth="2" aria-hidden>
+              <rect x="5" y="11" width="14" height="10" rx="2" />
+              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+            </svg>
+            <span
+              style={{
+                flex: 1,
+                minWidth: 0,
+                fontSize: 9,
+                fontFamily: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+                color: "#a1a1aa",
+                letterSpacing: "-0.02em",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
+              rage.events/events/soho-welcome
+            </span>
+          </div>
 
+          {/* Hero card — same structure as guest event poster */}
           <div
             style={{
               position: "relative",
-              flex: 1,
-              minHeight: 120,
               borderRadius: 18,
               overflow: "hidden",
-              border: "2px solid rgba(75,250,148,0.85)",
-              boxShadow: "0 0 36px rgba(75,250,148,0.22), inset 0 0 0 1px rgba(255,255,255,0.06)",
+              border: "1px solid rgba(255,255,255,0.1)",
+              boxShadow: "0 24px 48px -28px rgba(0,0,0,0.85)",
               background: "#0a0a0a",
             }}
           >
-            <motion.div
-              style={{ position: "absolute", inset: 0 }}
-              animate={reduceMotion ? undefined : { scale: [1, 1.05, 1] }}
-              transition={reduceMotion ? undefined : { duration: 14, repeat: Infinity, ease: "easeInOut" }}
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element -- in-phone marketing still; avoids layout shift in scroll mock */}
-              <img
-                src="/marketing-live-event.png"
-                alt="Crowd and lights at a live college event"
-                width={800}
-                height={1200}
-                style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 42%", display: "block" }}
-                decoding="async"
+            <div style={{ position: "relative", height: 148 }}>
+              <motion.div
+                style={{ position: "absolute", inset: 0 }}
+                animate={reduceMotion ? undefined : { scale: [1, 1.04, 1] }}
+                transition={reduceMotion ? undefined : { duration: 12, repeat: Infinity, ease: "easeInOut" }}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element -- in-phone marketing still */}
+                <img
+                  src="/marketing-live-event.png"
+                  alt="Sample guest event page"
+                  width={800}
+                  height={1200}
+                  style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 40%", display: "block" }}
+                  decoding="async"
+                />
+              </motion.div>
+              <div
+                aria-hidden
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  background:
+                    "radial-gradient(ellipse 100% 70% at 50% -10%, rgba(75,250,148,0.16), transparent 48%), linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.35) 45%, transparent 72%)",
+                  pointerEvents: "none",
+                }}
               />
-            </motion.div>
-            <div
-              aria-hidden
-              style={{
-                position: "absolute",
-                inset: 0,
-                background: "linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 42%)",
-                pointerEvents: "none",
-              }}
-            />
-            <div
-              style={{
-                position: "absolute",
-                top: 10,
-                right: 10,
-                width: 26,
-                height: 26,
-                borderRadius: "50%",
-                background: "rgba(75,250,148,0.95)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                boxShadow: "0 4px 14px rgba(0,0,0,0.45)",
-              }}
-              aria-hidden
-            >
-              <svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden>
-                <path d="M1 5.2L4.2 8.4L11 1" stroke="#000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
+
+              <div
+                style={{
+                  position: "absolute",
+                  left: 10,
+                  right: 10,
+                  bottom: 10,
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 6,
+                }}
+              >
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
+                  <span
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 5,
+                      borderRadius: 999,
+                      border: "1px solid rgba(255,255,255,0.2)",
+                      background: "rgba(0,0,0,0.45)",
+                      padding: "3px 8px",
+                      fontSize: 7,
+                      fontWeight: 800,
+                      letterSpacing: "0.12em",
+                      color: "rgba(255,255,255,0.9)",
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    <span style={{ display: "inline-flex", height: 5, width: 5, borderRadius: "50%", background: SIGNAL }} aria-hidden />
+                    Live on RAGE
+                  </span>
+                  <span
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 4,
+                      borderRadius: 999,
+                      border: "1px solid rgba(255,255,255,0.2)",
+                      background: "rgba(0,0,0,0.4)",
+                      padding: "3px 8px",
+                      fontSize: 7,
+                      fontWeight: 800,
+                      letterSpacing: "0.1em",
+                      color: "rgba(255,255,255,0.82)",
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    <span style={{ color: SIGNAL }} aria-hidden>
+                      ✦
+                    </span>
+                    Hosted by RAGE
+                  </span>
+                </div>
+                <h3
+                  style={{
+                    margin: 0,
+                    fontSize: 15,
+                    fontWeight: 900,
+                    letterSpacing: "-0.04em",
+                    lineHeight: 1.05,
+                    color: "#fff",
+                    textShadow: "0 2px 18px rgba(0,0,0,0.75)",
+                  }}
+                >
+                  SoHo welcome back
+                </h3>
+                <p style={{ margin: 0, fontSize: 9, fontWeight: 600, color: "rgba(255,255,255,0.88)" }}>
+                  Friday, Aug 29 · 10PM – 2AM
+                </p>
+              </div>
+            </div>
+
+            <div style={{ padding: "10px 10px 12px", background: "linear-gradient(to bottom, #050505, #080808)" }}>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                <span
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 5,
+                    borderRadius: 999,
+                    padding: "7px 11px",
+                    fontSize: 8,
+                    fontWeight: 800,
+                    letterSpacing: "0.06em",
+                    textTransform: "uppercase",
+                    color: "#000",
+                    background: `linear-gradient(90deg, ${SIGNAL}, #7dffc0)`,
+                    boxShadow: "0 0 20px -6px rgba(75,250,148,0.55)",
+                  }}
+                >
+                  Share drop
+                </span>
+                <span
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 5,
+                    borderRadius: 999,
+                    border: "1px solid rgba(255,255,255,0.22)",
+                    background: "rgba(255,255,255,0.06)",
+                    padding: "7px 11px",
+                    fontSize: 8,
+                    fontWeight: 800,
+                    letterSpacing: "0.06em",
+                    textTransform: "uppercase",
+                    color: "#f4f4f5",
+                  }}
+                >
+                  Copy link
+                </span>
+              </div>
+              <div
+                style={{
+                  marginTop: 10,
+                  borderRadius: 999,
+                  padding: "10px 12px",
+                  textAlign: "center",
+                  fontSize: 9,
+                  fontWeight: 900,
+                  letterSpacing: "0.04em",
+                  textTransform: "uppercase",
+                  color: "#0a0a0a",
+                  background: "linear-gradient(180deg, #f4f4f5 0%, #e4e4e7 100%)",
+                  boxShadow: "0 12px 28px -12px rgba(0,0,0,0.5)",
+                }}
+              >
+                Buy tickets
+              </div>
+              <p style={{ margin: "8px 0 0", textAlign: "center", fontSize: 7, lineHeight: 1.45, color: "#71717a" }}>
+                Same page everyone opens from your invite link — not a login wall.
+              </p>
             </div>
           </div>
-
-          <motion.p
-            style={{
-              opacity: captionOpacity,
-              y: captionY,
-              margin: "10px 0 0",
-              textAlign: "center",
-              fontSize: 9,
-              fontWeight: 600,
-              color: "#d4d4d8",
-              lineHeight: 1.45,
-              letterSpacing: "-0.01em",
-            }}
-          >
-            Your flyer isn&apos;t a PDF in a group chat—it&apos;s the night people actually pull up to.
-          </motion.p>
         </motion.div>
       </div>
     </div>
@@ -1006,7 +1134,7 @@ export function HomeTopSection() {
                   <FeedScreen progress={progress} />
                 </motion.div>
                 <motion.div style={{ opacity: phoneOps[1], position: "absolute", inset: 0, willChange: "opacity", transform: "translateZ(0)" }}>
-                  <EventMomentScreen progress={progress} />
+                  <GuestEventLinkPreviewScreen progress={progress} />
                 </motion.div>
                 <motion.div style={{ opacity: phoneOps[2], position: "absolute", inset: 0, willChange: "opacity", transform: "translateZ(0)" }}>
                   <TicketScreen progress={progress} />
