@@ -397,174 +397,354 @@ function FeedScreen({ progress }: { progress: MotionValue<number> }) {
   );
 }
 
-/* ─── phone screen 2: Create Event flow (polished host editor — like step 2/4) ─ */
+/* ─── phone screen 2: Create Event — polished host editor (step 2/4) ─ */
 function HostCreateEventPreviewScreen({ progress }: { progress: MotionValue<number> }) {
   const reduceMotion = useReducedMotion();
-  const wrapOpacity = useTransform(progress, [0.30, 0.42], [0, 1]);
-  const wrapY = useTransform(progress, [0.32, 0.46], [18, 0]);
+  const headerOpacity = useTransform(progress, [0.28, 0.40], [0, 1]);
+  const coverOpacity = useTransform(progress, [0.30, 0.44], [0, 1]);
+  const coverY = useTransform(progress, [0.30, 0.44], [22, 0]);
+  const fieldsOpacity = useTransform(progress, [0.36, 0.50], [0, 1]);
+  const fieldsY = useTransform(progress, [0.36, 0.50], [18, 0]);
+  const footerOpacity = useTransform(progress, [0.42, 0.56], [0, 1]);
+  const progressWidth = useTransform(progress, [0.34, 0.62], ["12%", "50%"]);
+
   const SIGNAL = "#4BFA94";
+  const ink = "#0c0c0e";
   const fieldBg = "#141416";
-  const fieldBorder = "rgba(255,255,255,0.08)";
+  const fieldBorder = "rgba(255,255,255,0.07)";
+  const fieldBorderActive = "rgba(75,250,148,0.35)";
 
   return (
-    <div style={{ position: "absolute", inset: 0, background: "#000", paddingTop: 52, display: "flex", flexDirection: "column" }}>
-      {/* App bar — matches create-event header pattern */}
-      <div
+    <div style={{ position: "absolute", inset: 0, background: ink, paddingTop: 52, display: "flex", flexDirection: "column" }}>
+      {/* App bar */}
+      <motion.div
         style={{
+          opacity: headerOpacity,
           flexShrink: 0,
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          padding: "2px 14px 10px",
+          padding: "4px 16px 12px",
         }}
       >
-        <span aria-hidden style={{ color: "#d4d4d8", fontSize: 22, lineHeight: 1, fontWeight: 300, width: 28 }}>
-          ‹
-        </span>
-        <span style={{ fontSize: 13, fontWeight: 800, letterSpacing: "-0.02em", color: "#fafafa" }}>Create Event</span>
         <span
           aria-hidden
           style={{
-            width: 26,
-            height: 26,
-            borderRadius: "50%",
-            background: SIGNAL,
+            width: 30,
+            height: 30,
+            borderRadius: 10,
+            border: "1px solid rgba(255,255,255,0.08)",
+            background: "rgba(255,255,255,0.03)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            boxShadow: "0 0 18px -4px rgba(75,250,148,0.55)",
+          }}
+        >
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#e4e4e7" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M15 18l-6-6 6-6" />
+          </svg>
+        </span>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
+          <span style={{ fontSize: 7, fontWeight: 800, letterSpacing: "0.18em", color: "#52525b", textTransform: "uppercase" }}>Host on RAGE</span>
+          <span style={{ fontSize: 13, fontWeight: 800, letterSpacing: "-0.02em", color: "#fafafa" }}>Create event</span>
+        </div>
+        <span
+          aria-hidden
+          style={{
+            width: 30,
+            height: 30,
+            borderRadius: 10,
+            background: `linear-gradient(180deg, ${SIGNAL} 0%, #6dffae 100%)`,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            boxShadow: "0 0 18px -4px rgba(75,250,148,0.55), inset 0 1px 0 rgba(255,255,255,0.35)",
           }}
         >
           <svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden>
-            <path d="M1 5.2L4.2 8.4L11 1" stroke="#000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M1 5.2L4.2 8.4L11 1" stroke="#0a0a0a" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </span>
-      </div>
+      </motion.div>
+
+      {/* Step progress */}
+      <motion.div
+        style={{ opacity: headerOpacity, flexShrink: 0, padding: "0 16px 10px" }}
+      >
+        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 5 }}>
+          <span style={{ fontSize: 7, fontWeight: 800, letterSpacing: "0.16em", color: "#a1a1aa", textTransform: "uppercase" }}>Step 2 of 4</span>
+          <span style={{ fontSize: 7, fontWeight: 700, letterSpacing: "0.1em", color: SIGNAL, textTransform: "uppercase" }}>Draft saved</span>
+        </div>
+        <div style={{ position: "relative", height: 3, borderRadius: 2, background: "rgba(255,255,255,0.06)", overflow: "hidden" }}>
+          <motion.div
+            style={{
+              width: progressWidth,
+              height: "100%",
+              borderRadius: 2,
+              background: `linear-gradient(90deg, ${SIGNAL}, #7dffc0)`,
+              boxShadow: "0 0 12px rgba(75,250,148,0.55)",
+            }}
+          />
+        </div>
+      </motion.div>
 
       <div
         className="no-scrollbar"
         style={{
           flex: 1,
           minHeight: 0,
-          overflow: "auto",
-          padding: "0 14px 16px",
+          overflow: "hidden",
+          padding: "0 16px 16px",
           display: "flex",
           flexDirection: "column",
+          gap: 10,
         }}
       >
+        {/* Cover */}
         <motion.div
           style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 10,
-            flex: "0 0 auto",
-            opacity: wrapOpacity,
-            y: wrapY,
+            opacity: coverOpacity,
+            y: coverY,
+            position: "relative",
+            borderRadius: 18,
+            overflow: "hidden",
+            border: `1px solid ${fieldBorder}`,
+            boxShadow: "0 26px 50px -32px rgba(0,0,0,0.95), inset 0 1px 0 rgba(255,255,255,0.05)",
+            background: "#0a0a0a",
+            height: 152,
           }}
         >
+          <motion.div
+            style={{ position: "absolute", inset: 0 }}
+            animate={reduceMotion ? undefined : { scale: [1, 1.04, 1] }}
+            transition={reduceMotion ? undefined : { duration: 12, repeat: Infinity, ease: "easeInOut" }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element -- in-phone marketing still */}
+            <img
+              src="/marketing-live-event.png"
+              alt="Event cover preview while creating an event"
+              width={800}
+              height={1200}
+              style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 38%", display: "block" }}
+              decoding="async"
+            />
+          </motion.div>
+          <div
+            aria-hidden
+            style={{
+              position: "absolute",
+              inset: 0,
+              background: "linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 55%)",
+            }}
+          />
+          {/* Replace cover chip */}
+          <div
+            style={{
+              position: "absolute",
+              left: 10,
+              bottom: 10,
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 5,
+              padding: "5px 9px",
+              borderRadius: 999,
+              background: "rgba(0,0,0,0.55)",
+              border: "1px solid rgba(255,255,255,0.16)",
+              backdropFilter: "blur(6px)",
+              WebkitBackdropFilter: "blur(6px)",
+            }}
+          >
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#fafafa" strokeWidth="2.2" aria-hidden>
+              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+              <polyline points="17 8 12 3 7 8" />
+              <line x1="12" y1="3" x2="12" y2="15" />
+            </svg>
+            <span style={{ fontSize: 7, fontWeight: 800, letterSpacing: "0.12em", color: "#fafafa", textTransform: "uppercase" }}>Replace cover</span>
+          </div>
+          {/* Live preview chip */}
+          <div
+            style={{
+              position: "absolute",
+              right: 10,
+              top: 10,
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 5,
+              padding: "4px 8px",
+              borderRadius: 999,
+              background: "rgba(0,0,0,0.5)",
+              border: "1px solid rgba(255,255,255,0.16)",
+              backdropFilter: "blur(6px)",
+              WebkitBackdropFilter: "blur(6px)",
+            }}
+          >
+            <span style={{ width: 5, height: 5, borderRadius: "50%", background: SIGNAL, boxShadow: `0 0 6px ${SIGNAL}` }} aria-hidden />
+            <span style={{ fontSize: 6.5, fontWeight: 800, letterSpacing: "0.14em", color: "#fafafa", textTransform: "uppercase" }}>Live preview</span>
+          </div>
+        </motion.div>
+
+        {/* Form fields */}
+        <motion.div style={{ opacity: fieldsOpacity, y: fieldsY, display: "flex", flexDirection: "column", gap: 8 }}>
+          {/* Title — active */}
           <div
             style={{
               position: "relative",
-              borderRadius: 22,
-              overflow: "hidden",
-              border: `1px solid ${fieldBorder}`,
-              boxShadow: "0 28px 56px -32px rgba(0,0,0,0.9)",
-              background: "#0a0a0a",
+              borderRadius: 14,
+              border: `1px solid ${fieldBorderActive}`,
+              background: fieldBg,
+              padding: "10px 12px 11px",
+              boxShadow: "0 0 0 3px rgba(75,250,148,0.06), inset 0 1px 0 rgba(255,255,255,0.04)",
             }}
           >
-            <div style={{ position: "relative", height: 162 }}>
-              <motion.div
-                style={{ position: "absolute", inset: 0 }}
-                animate={reduceMotion ? undefined : { scale: [1, 1.03, 1] }}
-                transition={reduceMotion ? undefined : { duration: 11, repeat: Infinity, ease: "easeInOut" }}
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element -- in-phone marketing still */}
-                <img
-                  src="/marketing-live-event.png"
-                  alt="Event cover preview while creating an event"
-                  width={800}
-                  height={1200}
-                  style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 38%", display: "block" }}
-                  decoding="async"
-                />
-              </motion.div>
-              <div
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <p style={{ margin: 0, fontSize: 7, fontWeight: 800, letterSpacing: "0.14em", color: "#a1a1aa", textTransform: "uppercase" }}>Title</p>
+              <span style={{ fontSize: 6.5, fontWeight: 700, letterSpacing: "0.08em", color: SIGNAL, textTransform: "uppercase" }}>● Editing</span>
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 4 }}>
+              <span style={{ fontSize: 13, fontWeight: 800, letterSpacing: "-0.03em", color: "#fafafa" }}>SoHo welcome back</span>
+              <motion.span
                 aria-hidden
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  background: "linear-gradient(to top, rgba(0,0,0,0.35) 0%, transparent 55%)",
-                  pointerEvents: "none",
-                }}
+                style={{ display: "inline-block", width: 1.5, height: 12, background: SIGNAL, borderRadius: 1 }}
+                animate={reduceMotion ? undefined : { opacity: [1, 0, 1] }}
+                transition={reduceMotion ? undefined : { duration: 1.1, repeat: Infinity, ease: "easeInOut" }}
               />
             </div>
           </div>
 
-          <div
-            style={{
-              borderRadius: 16,
-              border: `1px solid ${fieldBorder}`,
-              background: fieldBg,
-              padding: "11px 13px",
-            }}
-          >
-            <p style={{ margin: 0, fontSize: 8, fontWeight: 700, letterSpacing: "0.14em", color: "#71717a", textTransform: "uppercase" }}>
-              Title
-            </p>
-            <p style={{ margin: "5px 0 0", fontSize: 14, fontWeight: 800, letterSpacing: "-0.03em", color: "#fafafa" }}>Soho welcome back</p>
+          {/* Date + time row */}
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+            <div
+              style={{
+                borderRadius: 14,
+                border: `1px solid ${fieldBorder}`,
+                background: fieldBg,
+                padding: "9px 11px",
+              }}
+            >
+              <p style={{ margin: 0, fontSize: 7, fontWeight: 800, letterSpacing: "0.14em", color: "#71717a", textTransform: "uppercase" }}>Date</p>
+              <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 4 }}>
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={SIGNAL} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                  <rect x="3" y="4" width="18" height="18" rx="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+                <span style={{ fontSize: 10, fontWeight: 700, color: "#fafafa", letterSpacing: "-0.02em" }}>Fri, Aug 29</span>
+              </div>
+            </div>
+            <div
+              style={{
+                borderRadius: 14,
+                border: `1px solid ${fieldBorder}`,
+                background: fieldBg,
+                padding: "9px 11px",
+              }}
+            >
+              <p style={{ margin: 0, fontSize: 7, fontWeight: 800, letterSpacing: "0.14em", color: "#71717a", textTransform: "uppercase" }}>Time</p>
+              <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 4 }}>
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={SIGNAL} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                  <circle cx="12" cy="12" r="9" />
+                  <polyline points="12 7 12 12 15 14" />
+                </svg>
+                <span style={{ fontSize: 10, fontWeight: 700, color: "#fafafa", letterSpacing: "-0.02em" }}>10:00 PM</span>
+              </div>
+            </div>
           </div>
 
+          {/* Location */}
           <div
             style={{
-              borderRadius: 16,
+              borderRadius: 14,
               border: `1px solid ${fieldBorder}`,
               background: fieldBg,
-              padding: "13px 13px",
+              padding: "9px 11px",
             }}
           >
-            <p style={{ margin: 0, fontSize: 12, fontWeight: 600, color: "#52525b" }}>Add host *</p>
+            <p style={{ margin: 0, fontSize: 7, fontWeight: 800, letterSpacing: "0.14em", color: "#71717a", textTransform: "uppercase" }}>Location</p>
+            <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 4 }}>
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={SIGNAL} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
+                <circle cx="12" cy="10" r="3" />
+              </svg>
+              <span style={{ fontSize: 10, fontWeight: 700, color: "#fafafa", letterSpacing: "-0.02em" }}>121 Spring St · NYC</span>
+            </div>
           </div>
 
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 2 }}>
+          {/* Tickets */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              borderRadius: 14,
+              border: `1px solid ${fieldBorder}`,
+              background: fieldBg,
+              padding: "9px 11px",
+            }}
+          >
+            <div style={{ minWidth: 0 }}>
+              <p style={{ margin: 0, fontSize: 7, fontWeight: 800, letterSpacing: "0.14em", color: "#71717a", textTransform: "uppercase" }}>Tickets</p>
+              <p style={{ margin: "4px 0 0", fontSize: 10, fontWeight: 700, color: "#fafafa", letterSpacing: "-0.02em" }}>GA · $15</p>
+            </div>
             <span
               style={{
                 display: "inline-flex",
                 alignItems: "center",
+                gap: 4,
+                padding: "4px 8px",
                 borderRadius: 999,
+                background: "rgba(75,250,148,0.1)",
                 border: `1px solid ${SIGNAL}`,
-                background: "rgba(75,250,148,0.08)",
-                padding: "5px 11px",
-                fontSize: 8,
+                fontSize: 7,
                 fontWeight: 800,
-                letterSpacing: "0.12em",
+                letterSpacing: "0.1em",
                 color: SIGNAL,
                 textTransform: "uppercase",
               }}
             >
-              Draft saved
-            </span>
-            <span
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                borderRadius: 999,
-                border: "1px solid rgba(255,255,255,0.14)",
-                background: "rgba(255,255,255,0.03)",
-                padding: "5px 11px",
-                fontSize: 8,
-                fontWeight: 800,
-                letterSpacing: "0.12em",
-                color: "#a1a1aa",
-                textTransform: "uppercase",
-              }}
-            >
-              Step 2/4
+              + Tier
             </span>
           </div>
+        </motion.div>
 
-          <p style={{ margin: "4px 0 0", fontSize: 8, lineHeight: 1.5, color: "#52525b", textAlign: "center" }}>
-            Flyer, price, and guest link — one calm flow before you hit publish.
-          </p>
+        <motion.div style={{ opacity: footerOpacity, marginTop: "auto", paddingTop: 8 }}>
+          <div
+            style={{
+              position: "relative",
+              borderRadius: 14,
+              overflow: "hidden",
+              background: `linear-gradient(90deg, ${SIGNAL}, #7dffc0)`,
+              boxShadow: "0 18px 36px -14px rgba(75,250,148,0.55)",
+            }}
+          >
+            <span
+              style={{
+                display: "block",
+                padding: "11px 12px",
+                textAlign: "center",
+                fontSize: 10,
+                fontWeight: 900,
+                letterSpacing: "0.06em",
+                textTransform: "uppercase",
+                color: "#0a0a0a",
+              }}
+            >
+              Continue → tickets
+            </span>
+            <motion.div
+              aria-hidden
+              style={{
+                position: "absolute",
+                top: 0,
+                bottom: 0,
+                width: 44,
+                background: "linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.32), rgba(255,255,255,0))",
+                transform: "skewX(-16deg)",
+              }}
+              animate={reduceMotion ? undefined : { x: [-50, 240] }}
+              transition={reduceMotion ? undefined : { duration: 3.2, repeat: Infinity, ease: "linear", repeatDelay: 1 }}
+            />
+          </div>
         </motion.div>
       </div>
     </div>
