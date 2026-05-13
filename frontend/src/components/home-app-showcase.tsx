@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
+import { QrCode } from "lucide-react";
 import { PhoneShell } from "@/components/home-top-section";
 
 const SIGNAL = "#4BFA94";
@@ -89,6 +90,29 @@ function DoorScanScreen() {
             justifyContent: "center",
           }}
         >
+          {/* QR motif behind success state */}
+          <div
+            aria-hidden
+            style={{
+              position: "absolute",
+              inset: 0,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              pointerEvents: "none",
+              zIndex: 0,
+            }}
+          >
+            <QrCode
+              size={128}
+              strokeWidth={1.2}
+              style={{
+                color: SIGNAL,
+                opacity: 0.14,
+              }}
+            />
+          </div>
+
           {/* corner brackets */}
           {[
             { top: 10, left: 10, br: "12px 0 0 0", borderWidths: "2px 0 0 2px" },
@@ -112,12 +136,13 @@ function DoorScanScreen() {
                 borderWidth: b.borderWidths,
                 borderRadius: b.br,
                 boxShadow: `0 0 14px rgba(75,250,148,0.45)`,
+                zIndex: 1,
               }}
             />
           ))}
 
           {/* center success */}
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
+          <div style={{ position: "relative", zIndex: 2, display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
             <div
               style={{
                 width: 64,
@@ -151,6 +176,7 @@ function DoorScanScreen() {
               background: `linear-gradient(90deg, transparent, ${SIGNAL}, transparent)`,
               filter: "blur(0.4px)",
               opacity: 0.7,
+              zIndex: 3,
             }}
           />
         </div>
