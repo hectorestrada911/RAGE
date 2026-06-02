@@ -208,20 +208,33 @@ export function AuthFormPanel({ children, className }: { children: ReactNode; cl
   );
 }
 
-export function GoogleAuthButton({ onClick, loading, className }: { onClick: () => void; loading?: boolean; className?: string }) {
+export function GoogleAuthButton({
+  onClick,
+  loading,
+  blocked,
+  className,
+}: {
+  onClick: () => void;
+  loading?: boolean;
+  /** When true (e.g. in-app browser), Google OAuth is unavailable. */
+  blocked?: boolean;
+  className?: string;
+}) {
   const reduceMotion = useReducedMotion();
+  const disabled = loading || blocked;
   return (
     <motion.div
       className="w-full"
-      whileTap={reduceMotion ? undefined : { scale: 0.985 }}
+      whileTap={reduceMotion || disabled ? undefined : { scale: 0.985 }}
       transition={{ type: "spring", stiffness: 520, damping: 38 }}
     >
       <button
         type="button"
         onClick={onClick}
-        disabled={loading}
+        disabled={disabled}
+        title={blocked ? "Open this page in Safari or Chrome to sign in with Google" : undefined}
         className={cn(
-          "flex w-full items-center justify-center gap-3 rounded-full border border-white/[0.12] bg-white/[0.05] px-4 py-3 text-sm font-semibold text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] transition hover:bg-white/[0.1] disabled:cursor-not-allowed disabled:opacity-50",
+          "flex w-full items-center justify-center gap-3 rounded-full border border-white/[0.12] bg-white/[0.05] px-4 py-3 text-sm font-semibold text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] transition hover:bg-white/[0.1] disabled:cursor-not-allowed disabled:opacity-45",
           className,
         )}
       >

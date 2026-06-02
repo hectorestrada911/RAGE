@@ -13,6 +13,7 @@ import {
   useAuthMotion,
 } from "@/components/auth-shell";
 import { EduVerifyShieldIcon } from "@/components/edu-verify-shield-icon";
+import { InAppBrowserAuthBanner, useInAppBrowser } from "@/components/in-app-browser-auth-banner";
 import { mapAuthActionError, mapAuthCallbackError } from "@/lib/auth-errors";
 import { getSupabaseBrowserClient } from "@/lib/supabase-browser";
 import { readEventDraft, safeNextPath } from "@/lib/event-draft";
@@ -37,6 +38,7 @@ function SignupForm() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const inAppBrowser = useInAppBrowser();
 
   useEffect(() => {
     setHasEventDraft(Boolean(readEventDraft()));
@@ -54,6 +56,7 @@ function SignupForm() {
   }, [authCallbackRaw, searchParams, router]);
 
   async function signInWithGoogle() {
+    if (inAppBrowser) return;
     flushUi(() => {
       setLoading(true);
       setError(null);
@@ -179,10 +182,13 @@ function SignupForm() {
             </p>
           ) : null}
 
+          <InAppBrowserAuthBanner className="mt-6" />
+
           <div className="mt-10 space-y-3">
             <GoogleAuthButton
               onClick={() => void signInWithGoogle()}
               loading={loading}
+              blocked={Boolean(inAppBrowser)}
               className="rounded-xl border border-white/15 bg-white/[0.04] py-3.5 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.04)]"
             />
             <AuthDivider />
