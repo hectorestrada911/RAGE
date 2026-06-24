@@ -911,65 +911,49 @@ function TicketScreen({ progress }: { progress: MotionValue<number> }) {
 
 /* ─── titanium phone shell ──────────────────────────────────────── */
 export function PhoneShell({ children, w = 300, h = 620 }: { children: ReactNode; w?: number; h?: number }) {
-  const frameW = 7;
-  const innerR = 50;
-  const frameR = 58;
-
-  const buttonGrad = "linear-gradient(to bottom, #2c2c2e 0%, #4d4d50 40%, #4d4d50 60%, #2c2c2e 100%)";
+  // Screen-window insets for the device art in public/phone-frame.png (titanium
+  // iPhone, Dynamic Island). The PNG's screen area is knocked out to transparent so
+  // it overlays as a bezel on top of the animated screens. Insets sit a bit inside
+  // the opening so the screens bleed under the opaque bezel — no white/edge gap.
+  const screen = { top: "1.0%", bottom: "1.0%", left: "3.3%", right: "3.3%" };
 
   return (
     <div style={{ position: "relative", width: w, height: h, flexShrink: 0 }}>
-      <div style={{
-        position: "absolute", inset: 0, borderRadius: frameR,
-        background: "#0b0b0d",
-        boxShadow: [
-          "inset 0 0 0 1px rgba(255,255,255,0.10)",
-          "inset 0 1.5px 0 rgba(255,255,255,0.06)",
-          "0 30px 80px -24px rgba(0,0,0,0.85)",
-        ].join(", "),
-      }} />
-
+      {/* ambient drop shadow under the device */}
       <div aria-hidden style={{
-        position: "absolute", inset: 0, borderRadius: frameR, pointerEvents: "none",
-        background: "linear-gradient(90deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0) 6%, rgba(255,255,255,0) 94%, rgba(255,255,255,0.07) 100%)",
+        position: "absolute", inset: 0, borderRadius: w * 0.13, pointerEvents: "none",
+        boxShadow: "0 30px 80px -24px rgba(0,0,0,0.85)",
       }} />
 
-      {/* volume notches */}
-      <div style={{ position: "absolute", left: -4, top: 100, width: 4, height: 26, borderRadius: 2, background: buttonGrad, boxShadow: "inset 0 1px 0 rgba(255,255,255,0.25), -1px 0 1.5px rgba(0,0,0,0.6)" }} />
-      <div style={{ position: "absolute", left: -4, top: 138, width: 4, height: 44, borderRadius: 2, background: buttonGrad, boxShadow: "inset 0 1px 0 rgba(255,255,255,0.25), -1px 0 1.5px rgba(0,0,0,0.6)" }} />
-      <div style={{ position: "absolute", left: -4, top: 192, width: 4, height: 44, borderRadius: 2, background: buttonGrad, boxShadow: "inset 0 1px 0 rgba(255,255,255,0.25), -1px 0 1.5px rgba(0,0,0,0.6)" }} />
-      <div style={{ position: "absolute", right: -4, top: 162, width: 4, height: 72, borderRadius: 2, background: buttonGrad, boxShadow: "inset 0 1px 0 rgba(255,255,255,0.25), 1px 0 1.5px rgba(0,0,0,0.6)" }} />
-
+      {/* animated app screens render inside the device's screen window */}
       <div style={{
         position: "absolute",
-        top: frameW, left: frameW,
-        right: frameW, bottom: frameW,
-        borderRadius: innerR,
+        top: screen.top, left: screen.left, right: screen.right, bottom: screen.bottom,
+        borderRadius: w * 0.085,
         overflow: "hidden",
         background: "#000",
-        boxShadow: "inset 0 0 0 1.5px #000, inset 0 0 22px rgba(0,0,0,0.6)",
+        zIndex: 1,
       }}>
-        {/* status bar */}
-        <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 52, zIndex: 20, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 22px 0" }}>
-          <span style={{ fontSize: 12, fontWeight: 600, color: "#fff", letterSpacing: "-0.01em" }}>9:41</span>
-          <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
-            <svg width="16" height="11" viewBox="0 0 16 11" fill="white"><rect x="0" y="4" width="3" height="7" rx="1" /><rect x="4" y="2.5" width="3" height="8.5" rx="1" /><rect x="8" y="1" width="3" height="10" rx="1" /><rect x="12" y="0" width="3" height="11" rx="1" /></svg>
-          </div>
-        </div>
-
-        {/* Dynamic island */}
-        <div style={{ position: "absolute", top: 12, left: "50%", transform: "translateX(-50%)", width: 118, height: 32, borderRadius: 20, background: "#000", zIndex: 30, boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.06)", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 14px" }}>
-          <div style={{ position: "relative", width: 8, height: 8, borderRadius: "50%", background: "radial-gradient(circle at 30% 30%, #1a4a6e 0%, #0a1828 55%, #000 100%)", boxShadow: "inset 0 0 1px rgba(120,180,220,0.45)" }}>
-            <div style={{ position: "absolute", top: 1, left: 1, width: 2.5, height: 2.5, borderRadius: "50%", background: "rgba(180,220,255,0.65)", filter: "blur(0.3px)" }} />
-          </div>
-          <div style={{ width: 6, height: 6, borderRadius: "50%", background: "radial-gradient(circle at 35% 35%, #2a2a2c 0%, #050505 70%)", boxShadow: "inset 0 0 1px rgba(255,255,255,0.08)" }} />
-        </div>
-
         {children}
-
-        {/* Home bar */}
-        <div style={{ position: "absolute", bottom: 10, left: "50%", transform: "translateX(-50%)", width: 120, height: 5, borderRadius: 3, background: "rgba(255,255,255,0.95)", boxShadow: "0 0 8px rgba(255,255,255,0.3)" }} />
       </div>
+
+      {/* device frame overlay (bezel + notch); screen area is transparent */}
+      <img
+        src="/phone-frame.png?v=4"
+        alt=""
+        aria-hidden
+        draggable={false}
+        style={{
+          position: "absolute",
+          inset: 0,
+          width: "100%",
+          height: "100%",
+          objectFit: "fill",
+          pointerEvents: "none",
+          userSelect: "none",
+          zIndex: 2,
+        }}
+      />
     </div>
   );
 }
