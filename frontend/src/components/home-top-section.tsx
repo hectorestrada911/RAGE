@@ -62,7 +62,7 @@ const DISCOVER_CARD = "#1c1c1e";
 const SIGNAL = "#4BFA94";
 
 /* ─── phone screen 1: event feed (Discover) ─────────────────────── */
-function FeedScreen({ progress }: { progress: MotionValue<number> }) {
+export function FeedScreen({ progress }: { progress: MotionValue<number> }) {
   const reduceMotion = useReducedMotion();
   const tabs = [
     { label: "Tonight", active: true },
@@ -433,6 +433,193 @@ function FeedScreen({ progress }: { progress: MotionValue<number> }) {
           ))}
         </div>
       </div>
+    </div>
+  );
+}
+
+/* ─── phone screen 1 (alt): event detail — host view, flyer-forward ─ */
+function EventDetailScreen({ progress }: { progress: MotionValue<number> }) {
+  const flyer =
+    "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=600&q=80";
+
+  /* staggered entrance, same window as the old feed screen */
+  const flyerY = useTransform(progress, [0.015, 0.115], [22, 0]);
+  const flyerO = useTransform(progress, [0.015, 0.115], [0, 1]);
+  const rowsY = useTransform(progress, [0.060, 0.160], [18, 0]);
+  const rowsO = useTransform(progress, [0.060, 0.160], [0, 1]);
+  const hostY = useTransform(progress, [0.085, 0.185], [18, 0]);
+  const hostO = useTransform(progress, [0.085, 0.185], [0, 1]);
+
+  const guestAvatars = ["#a78bfa", "#f472b6", "#60a5fa"];
+
+  return (
+    <div style={{ position: "absolute", inset: 0, background: "#000", overflow: "hidden", paddingTop: 50, display: "flex", flexDirection: "column" }}>
+      {/* ambient backdrop: the flyer bleeding through, iOS-style */}
+      <div aria-hidden style={{ position: "absolute", inset: -24, zIndex: 0 }}>
+        {/* eslint-disable-next-line @next/next/no-img-element -- in-phone marketing still */}
+        <img
+          src={flyer}
+          alt=""
+          width={600}
+          height={800}
+          style={{ width: "100%", height: "100%", objectFit: "cover", filter: "blur(26px) brightness(0.5) saturate(1.25)", display: "block" }}
+          decoding="async"
+        />
+        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, rgba(0,0,0,0.30) 0%, rgba(0,0,0,0.55) 45%, rgba(0,0,0,0.92) 100%)" }} />
+      </div>
+
+      {/* nav row */}
+      <div style={{ position: "relative", zIndex: 1, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "2px 12px 8px" }}>
+        <span aria-hidden style={{ width: 28, height: 28, borderRadius: "50%", background: "rgba(0,0,0,0.45)", border: "1px solid rgba(255,255,255,0.12)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fafafa" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M15 18l-6-6 6-6" />
+          </svg>
+        </span>
+        <div style={{ display: "flex", gap: 6 }}>
+          <span aria-hidden style={{ width: 28, height: 28, borderRadius: "50%", background: "rgba(0,0,0,0.45)", border: "1px solid rgba(255,255,255,0.12)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fafafa" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
+            </svg>
+          </span>
+          <span aria-hidden style={{ width: 28, height: 28, borderRadius: "50%", background: "rgba(0,0,0,0.45)", border: "1px solid rgba(255,255,255,0.12)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fafafa", fontSize: 11, fontWeight: 900, letterSpacing: "0.08em" }}>
+            ···
+          </span>
+        </div>
+      </div>
+
+      {/* flyer card */}
+      <motion.div
+        style={{
+          y: flyerY,
+          opacity: flyerO,
+          position: "relative",
+          zIndex: 1,
+          margin: "0 12px",
+          height: 236,
+          borderRadius: 18,
+          overflow: "hidden",
+          border: "1px solid rgba(255,255,255,0.14)",
+          boxShadow: "0 26px 54px -26px rgba(0,0,0,0.95)",
+          flexShrink: 0,
+        }}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element -- in-phone marketing still */}
+        <img
+          src={flyer}
+          alt=""
+          width={600}
+          height={800}
+          style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 35%", display: "block" }}
+          decoding="async"
+        />
+        <div aria-hidden style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 40%), radial-gradient(ellipse 90% 60% at 50% 100%, rgba(0,0,0,0.35), transparent 70%)" }} />
+        {/* poster art text */}
+        <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-end", paddingBottom: 16, gap: 6 }}>
+          <p style={{ margin: 0, fontSize: 7, fontWeight: 900, letterSpacing: "0.3em", color: "rgba(255,255,255,0.85)", textTransform: "uppercase", textShadow: "0 1px 10px rgba(0,0,0,0.8)" }}>
+            RAGE presents
+          </p>
+          <p style={{ margin: 0, fontSize: 21, fontWeight: 900, letterSpacing: "-0.03em", color: "#fff", lineHeight: 0.95, textAlign: "center", textTransform: "uppercase", textShadow: "0 2px 18px rgba(0,0,0,0.85)" }}>
+            Campus<br />Lights Fest
+          </p>
+          <span style={{ display: "inline-flex", alignItems: "center", gap: 5, padding: "4px 9px", borderRadius: 999, background: "rgba(0,0,0,0.55)", border: "1px solid rgba(255,255,255,0.22)" }}>
+            <span aria-hidden style={{ width: 5, height: 5, borderRadius: "50%", background: SIGNAL, boxShadow: `0 0 6px ${SIGNAL}` }} />
+            <span style={{ fontSize: 7, fontWeight: 900, letterSpacing: "0.16em", color: "#fafafa", textTransform: "uppercase" }}>Tonight · 10 PM</span>
+          </span>
+        </div>
+      </motion.div>
+
+      {/* detail rows */}
+      <motion.div style={{ y: rowsY, opacity: rowsO, position: "relative", zIndex: 1, padding: "12px 14px 0", display: "flex", flexDirection: "column", gap: 7 }}>
+        {/* host */}
+        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          <span aria-hidden style={{ width: 16, height: 16, borderRadius: "50%", background: "linear-gradient(140deg, #4f46e5 0%, #db2777 100%)", border: "1px solid rgba(255,255,255,0.25)" }} />
+          <span style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.85)" }}>Jordan Reyes</span>
+          <span aria-hidden style={{ fontSize: 9, color: "#71717a" }}>›</span>
+        </div>
+
+        <p style={{ margin: 0, fontSize: 19, fontWeight: 900, letterSpacing: "-0.03em", color: "#fff", lineHeight: 1.05 }}>Campus Lights Fest</p>
+
+        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.75)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+            <rect x="3" y="4" width="18" height="18" rx="2" />
+            <line x1="16" y1="2" x2="16" y2="6" />
+            <line x1="8" y1="2" x2="8" y2="6" />
+            <line x1="3" y1="10" x2="21" y2="10" />
+          </svg>
+          <span style={{ fontSize: 10, fontWeight: 600, color: "rgba(255,255,255,0.8)" }}>Tonight, 10:00 PM – 2:00 AM</span>
+        </div>
+
+        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.75)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+            <path d="M9 18V5l12-2v13" />
+            <circle cx="6" cy="18" r="3" />
+            <circle cx="18" cy="16" r="3" />
+          </svg>
+          <span style={{ fontSize: 10, fontWeight: 600, color: "rgba(255,255,255,0.8)" }}>Event playlist</span>
+          <span aria-hidden style={{ fontSize: 9, color: "#71717a" }}>›</span>
+        </div>
+
+        {/* guests */}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, marginTop: 2 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 6, minWidth: 0 }}>
+            <span style={{ display: "inline-flex", flexShrink: 0 }}>
+              {guestAvatars.map((c, i) => (
+                <span key={i} aria-hidden style={{ width: 16, height: 16, borderRadius: "50%", background: c, border: "1.5px solid rgba(0,0,0,0.7)", marginLeft: i === 0 ? 0 : -5 }} />
+              ))}
+            </span>
+            <span style={{ fontSize: 8.5, fontWeight: 600, color: "rgba(255,255,255,0.8)", lineHeight: 1.3 }}>
+              <span style={{ fontWeight: 800, color: "#fff" }}>Maya Chen, Devon Park,</span> and 154 others
+            </span>
+          </div>
+          <span style={{ flexShrink: 0, fontSize: 8, fontWeight: 700, color: "#fafafa", border: "1px solid rgba(255,255,255,0.25)", borderRadius: 999, padding: "4px 9px", background: "rgba(0,0,0,0.3)" }}>View all</span>
+        </div>
+
+        {/* actions */}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginTop: 4 }}>
+          <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 5, borderRadius: 999, padding: "9px 10px", background: "#fff", color: "#0a0a0a", fontSize: 9, fontWeight: 900, letterSpacing: "0.04em", boxShadow: "0 12px 26px -14px rgba(255,255,255,0.4)" }}>
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#0a0a0a" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+              <path d="M12 19V5" />
+              <path d="m5 12 7-7 7 7" />
+            </svg>
+            Invite
+          </span>
+          <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 5, borderRadius: 999, padding: "9px 10px", background: "rgba(20,20,22,0.75)", border: "1px solid rgba(255,255,255,0.14)", color: "#fafafa", fontSize: 9, fontWeight: 800, letterSpacing: "0.04em" }}>
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fafafa" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+              <path d="m3 11 18-8-8 18-2-8-8-2z" />
+            </svg>
+            Text blast
+          </span>
+        </div>
+      </motion.div>
+
+      {/* host center */}
+      <motion.div style={{ y: hostY, opacity: hostO, position: "relative", zIndex: 1, padding: "12px 14px 0", display: "flex", flexDirection: "column", gap: 8 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+          <span style={{ fontSize: 11, fontWeight: 900, letterSpacing: "-0.01em", color: "#fff" }}>Host Center</span>
+          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.55)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+            <rect x="3" y="11" width="18" height="11" rx="2" />
+            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+          </svg>
+        </div>
+        <div style={{ display: "flex", alignItems: "flex-start", gap: 22 }}>
+          {[
+            { value: "187", label: "guests" },
+            { value: "9", label: "groups" },
+            { value: "1.2k", label: "views" },
+          ].map((s) => (
+            <div key={s.label} style={{ display: "flex", flexDirection: "column", gap: 1 }}>
+              <span style={{ fontSize: 13, fontWeight: 900, color: "#fff", letterSpacing: "-0.02em" }}>{s.value}</span>
+              <span style={{ fontSize: 7.5, fontWeight: 600, color: "rgba(255,255,255,0.5)", letterSpacing: "0.04em" }}>{s.label}</span>
+            </div>
+          ))}
+        </div>
+        <span style={{ fontSize: 11, fontWeight: 900, letterSpacing: "-0.01em", color: "#fff", marginTop: 4 }}>Location</span>
+        {/* map card, intentionally cut by the bottom bezel */}
+        <div aria-hidden style={{ height: 70, borderRadius: 14, border: "1px solid rgba(255,255,255,0.1)", background: "linear-gradient(140deg, #17181b 0%, #0c0d10 100%)", position: "relative", overflow: "hidden" }}>
+          <div style={{ position: "absolute", inset: 0, opacity: 0.5, background: "repeating-linear-gradient(0deg, transparent 0 17px, rgba(255,255,255,0.05) 17px 18px), repeating-linear-gradient(90deg, transparent 0 17px, rgba(255,255,255,0.05) 17px 18px)" }} />
+          <span style={{ position: "absolute", left: "46%", top: "38%", width: 10, height: 10, borderRadius: "50%", background: SIGNAL, boxShadow: `0 0 0 4px rgba(75,250,148,0.22), 0 0 14px ${SIGNAL}` }} />
+        </div>
+      </motion.div>
     </div>
   );
 }
@@ -865,6 +1052,7 @@ function TicketScreen({ progress }: { progress: MotionValue<number> }) {
         style={{
           opacity: qrOpacity,
           scale: qrScale,
+          position: "relative",
           marginTop: 14,
           width: 152,
           height: 152,
@@ -1072,7 +1260,7 @@ export function HomeTopSection() {
             inset: 0,
             pointerEvents: "none",
             background:
-              "radial-gradient(circle at 12% 25%, rgba(75,250,148,0.06), transparent 38%), radial-gradient(circle at 88% 88%, rgba(0,0,254,0.05), transparent 40%)",
+              "radial-gradient(circle at 12% 25%, rgba(75,250,148,0.06), transparent 38%)",
           }}
         />
 
@@ -1285,7 +1473,7 @@ export function HomeTopSection() {
             >
               <PhoneShell>
                 <motion.div style={{ opacity: phoneOps[0], position: "absolute", inset: 0, willChange: "opacity", transform: "translateZ(0)" }}>
-                  <FeedScreen progress={progress} />
+                  <EventDetailScreen progress={progress} />
                 </motion.div>
                 <motion.div style={{ opacity: phoneOps[1], position: "absolute", inset: 0, willChange: "opacity", transform: "translateZ(0)" }}>
                   <HostCreateEventPreviewScreen progress={progress} />

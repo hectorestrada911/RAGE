@@ -8,8 +8,8 @@ export default function HomePage() {
     <main className="min-w-0 text-zinc-100">
       <HomeTopSection />
       <HomeSchoolsCta />
-      <HomeAppShowcase />
       <HomeFaqSection />
+      <HomeAppShowcase />
     </main>
   );
 }
