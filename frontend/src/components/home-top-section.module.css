@@ -1,0 +1,110 @@
+.section {
+  position: relative;
+  min-height: 320vh;
+  min-height: 320svh;
+  background: #000;
+}
+
+.stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: clip;
+  isolation: isolate;
+}
+
+/* The mockup is a visual, so a swipe over it belongs to the page. */
+.device {
+  pointer-events: none;
+  user-select: none;
+}
+
+.screen {
+  position: absolute;
+  inset: 0;
+  contain: layout paint;
+}
+
+.eventBackdrop {
+  position: absolute;
+  inset: -24px;
+  z-index: 0;
+}
+
+.chapter {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 8px;
+  color: #71717a;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  transition: color 150ms;
+}
+
+.chapters {
+  right: 32px;
+  bottom: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.chapter:hover,
+.chapter[aria-current="step"] {
+  color: #4bfa94;
+}
+
+.chapter:focus-visible {
+  outline: 2px solid #4bfa94;
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+.chapterTrack {
+  width: 20px;
+  height: 2px;
+  overflow: hidden;
+  background: #27272a;
+}
+
+.chapterFill {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: #4bfa94;
+  transform-origin: left;
+}
+
+@media (max-width: 1023px), (pointer: coarse) {
+  .chapters {
+    right: 12px;
+    bottom: 2px;
+    left: 12px;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .chapter { min-height: 32px; }
+  .chapterTrack { width: 16px; }
+
+  /* Preserve the flyer colors without filtering a texture during every phone transform. */
+  .eventBackdrop {
+    inset: 0;
+    background: radial-gradient(ellipse at 65% 12%, #04323b, transparent 65%),
+      radial-gradient(ellipse at 0% 50%, #122a23, transparent 70%), #030809;
+  }
+
+  .eventBackdrop img {
+    display: none;
+  }
+
+  .device [style*="backdrop-filter"] {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}
+

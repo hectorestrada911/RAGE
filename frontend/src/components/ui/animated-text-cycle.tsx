@@ -8,12 +8,14 @@ interface AnimatedTextCycleProps {
   words: string[];
   interval?: number;
   className?: string;
+  active?: boolean;
 }
 
 export default function AnimatedTextCycle({
   words,
   interval = 5000,
   className = "",
+  active = true,
 }: AnimatedTextCycleProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [width, setWidth] = useState("auto");
@@ -28,12 +30,13 @@ export default function AnimatedTextCycle({
   }, [currentIndex]);
 
   useEffect(() => {
+    if (!active) return;
     const timer = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % words.length);
     }, interval);
 
     return () => clearInterval(timer);
-  }, [interval, words.length]);
+  }, [active, interval, words.length]);
 
   const containerVariants: Variants = {
     hidden: {

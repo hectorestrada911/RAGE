@@ -1,17 +1,20 @@
 "use client";
 
-import { type ReactNode, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { type ReactNode, useEffect, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import {
   motion,
   AnimatePresence,
-  useScroll,
   useTransform,
   useMotionValueEvent,
+  useMotionValue,
+  useInView,
   useReducedMotion,
   type MotionValue,
 } from "framer-motion";
 import AnimatedTextCycle from "@/components/ui/animated-text-cycle";
+import { useHeroScroll } from "@/components/use-hero-scroll";
+import styles from "./home-top-section.module.css";
 
 const cyclingPhrases = [
   "Your night.",
@@ -439,8 +442,7 @@ export function FeedScreen({ progress }: { progress: MotionValue<number> }) {
 
 /* ─── phone screen 1 (alt): event detail — host view, flyer-forward ─ */
 function EventDetailScreen({ progress }: { progress: MotionValue<number> }) {
-  const flyer =
-    "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=600&q=80";
+  const flyer = "/marketing-live-event.png";
 
   /* staggered entrance, same window as the old feed screen */
   const flyerY = useTransform(progress, [0.015, 0.115], [22, 0]);
@@ -455,7 +457,7 @@ function EventDetailScreen({ progress }: { progress: MotionValue<number> }) {
   return (
     <div style={{ position: "absolute", inset: 0, background: "#000", overflow: "hidden", paddingTop: 50, display: "flex", flexDirection: "column" }}>
       {/* ambient backdrop: the flyer bleeding through, iOS-style */}
-      <div aria-hidden style={{ position: "absolute", inset: -24, zIndex: 0 }}>
+      <div aria-hidden className={styles.eventBackdrop}>
         {/* eslint-disable-next-line @next/next/no-img-element -- in-phone marketing still */}
         <img
           src={flyer}
@@ -625,7 +627,7 @@ function EventDetailScreen({ progress }: { progress: MotionValue<number> }) {
 }
 
 /* ─── phone screen 2: Create Event — polished host editor (step 2/4) ─ */
-function HostCreateEventPreviewScreen({ progress }: { progress: MotionValue<number> }) {
+function HostCreateEventPreviewScreen({ progress, active = true }: { progress: MotionValue<number>; active?: boolean }) {
   const reduceMotion = useReducedMotion();
   const headerOpacity = useTransform(progress, [0.28, 0.40], [0, 1]);
   const coverOpacity = useTransform(progress, [0.30, 0.44], [0, 1]);
@@ -752,8 +754,8 @@ function HostCreateEventPreviewScreen({ progress }: { progress: MotionValue<numb
               left: "-7%",
               right: "-7%",
             }}
-            animate={reduceMotion ? undefined : { scale: [1, 1.04, 1] }}
-            transition={reduceMotion ? undefined : { duration: 12, repeat: Infinity, ease: "easeInOut" }}
+            animate={reduceMotion || !active ? { scale: 1 } : { scale: [1, 1.04, 1] }}
+            transition={reduceMotion || !active ? undefined : { duration: 12, repeat: Infinity, ease: "easeInOut" }}
           >
             {/* eslint-disable-next-line @next/next/no-img-element -- in-phone marketing still */}
             <img
@@ -843,8 +845,8 @@ function HostCreateEventPreviewScreen({ progress }: { progress: MotionValue<numb
               <motion.span
                 aria-hidden
                 style={{ display: "inline-block", width: 1.5, height: 12, background: SIGNAL, borderRadius: 1 }}
-                animate={reduceMotion ? undefined : { opacity: [1, 0, 1] }}
-                transition={reduceMotion ? undefined : { duration: 1.1, repeat: Infinity, ease: "easeInOut" }}
+                animate={reduceMotion || !active ? { opacity: 1 } : { opacity: [1, 0, 1] }}
+                transition={reduceMotion || !active ? undefined : { duration: 1.1, repeat: Infinity, ease: "easeInOut" }}
               />
             </div>
           </div>
@@ -993,8 +995,8 @@ function HostCreateEventPreviewScreen({ progress }: { progress: MotionValue<numb
               background: "linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.32), rgba(255,255,255,0))",
               transform: "skewX(-16deg)",
             }}
-            animate={reduceMotion ? undefined : { x: [-50, 240] }}
-            transition={reduceMotion ? undefined : { duration: 3.2, repeat: Infinity, ease: "linear", repeatDelay: 1 }}
+            animate={reduceMotion || !active ? { x: -50 } : { x: [-50, 240] }}
+            transition={reduceMotion || !active ? undefined : { duration: 3.2, repeat: Infinity, ease: "linear", repeatDelay: 1 }}
           />
         </div>
       </motion.div>
@@ -1003,7 +1005,7 @@ function HostCreateEventPreviewScreen({ progress }: { progress: MotionValue<numb
 }
 
 /* ─── phone screen 3: QR ticket ─────────────────────────────────── */
-function TicketScreen({ progress }: { progress: MotionValue<number> }) {
+function TicketScreen({ progress, active = true }: { progress: MotionValue<number>; active?: boolean }) {
   const reduceMotion = useReducedMotion();
   const qrScale = useTransform(progress, [0.64, 0.78], [0.7, 1]);
   const qrOpacity = useTransform(progress, [0.64, 0.74], [0, 1]);
@@ -1084,8 +1086,8 @@ function TicketScreen({ progress }: { progress: MotionValue<number> }) {
             background: "linear-gradient(90deg, rgba(75,250,148,0), rgba(75,250,148,0.95), rgba(75,250,148,0))",
             boxShadow: "0 0 10px rgba(75,250,148,0.7)",
           }}
-          animate={reduceMotion ? undefined : { y: [0, 118, 0] }}
-          transition={reduceMotion ? undefined : { duration: 3.1, repeat: Infinity, ease: "easeInOut" }}
+          animate={reduceMotion || !active ? { y: 0 } : { y: [0, 118, 0] }}
+          transition={reduceMotion || !active ? undefined : { duration: 3.1, repeat: Infinity, ease: "easeInOut" }}
         />
       </motion.div>
       <motion.div style={{ opacity: badgeOpacity, y: badgeY, marginTop: 14, display: "flex", alignItems: "center", gap: 7, background: "rgba(75,250,148,0.12)", borderRadius: 999, padding: "7px 16px" }}>
@@ -1126,6 +1128,7 @@ export function PhoneShell({ children, w = 300, h = 620 }: { children: ReactNode
       </div>
 
       {/* device frame overlay (bezel + notch); screen area is transparent */}
+      {/* eslint-disable-next-line @next/next/no-img-element -- fixed decorative frame is cached locally */}
       <img
         src="/phone-frame.png?v=4"
         alt=""
@@ -1147,85 +1150,89 @@ export function PhoneShell({ children, w = 300, h = 620 }: { children: ReactNode
 }
 
 /* ─── main component ─────────────────────────────────────────────── */
-export function HomeTopSection() {
-  const containerRef = useRef<HTMLDivElement>(null);
+function HeroHeadline({ active = true }: { active?: boolean }) {
   const reduceMotion = useReducedMotion();
   const [phraseIdx, setPhraseIdx] = useState(0);
 
   useEffect(() => {
-    if (reduceMotion) return;
+    if (reduceMotion || !active) return;
     const id = setInterval(() => setPhraseIdx(i => (i + 1) % cyclingPhrases.length), 2200);
     return () => clearInterval(id);
-  }, [reduceMotion]);
+  }, [reduceMotion, active]);
 
-  // Use a manual offsetTop-based calculation instead of useScroll({target,offset}).
-  // useScroll with target can mis-measure on certain layouts (Framer warns
-  // when the scroll container isn't non-static), so compute progress directly
-  // from window scrollY against the section's measured top + scrollable range.
-  const { scrollY } = useScroll();
-  const [sectionTop, setSectionTop] = useState(0);
-  const [sectionRange, setSectionRange] = useState(2400);
-
-  useLayoutEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-    const recalc = () => {
-      setSectionTop(el.offsetTop);
-      setSectionRange(Math.max(1, el.offsetHeight - window.innerHeight));
-    };
-    recalc();
-    window.addEventListener("resize", recalc);
-    return () => window.removeEventListener("resize", recalc);
-  }, []);
-
-  const progress = useTransform(
-    scrollY,
-    [sectionTop, sectionTop + sectionRange],
-    [0, 1],
-    { clamp: true }
+  return (
+    <>
+      <p className="text-[10px] font-bold uppercase tracking-[0.28em] text-[#4BFA94]">Discover</p>
+      <h1 className="mt-3 text-[clamp(2.55rem,12.8vw,3rem)] font-black uppercase leading-[0.88] tracking-[-0.04em] text-white sm:text-6xl lg:text-7xl">
+        Your campus.<br />
+        <span className="relative inline-block overflow-hidden" style={{ minWidth: "8ch" }}>
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.span
+              key={phraseIdx}
+              className="inline-block bg-gradient-to-r from-[#4BFA94] to-emerald-300 bg-clip-text text-transparent"
+              initial={{ y: "60%", opacity: 0 }}
+              animate={{ y: "0%", opacity: 1 }}
+              exit={{ y: "-60%", opacity: 0 }}
+              transition={{ duration: 0.38, ease: [0.25, 0.46, 0.45, 0.94] }}
+            >
+              {cyclingPhrases[phraseIdx]}
+            </motion.span>
+          </AnimatePresence>
+        </span>
+      </h1>
+      <p className="mt-5 max-w-[280px] text-sm leading-relaxed text-zinc-500">
+        Every party, show, and event near you, curated by students, for students.
+      </p>
+      <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
+        <Link href="/signup" className="inline-flex h-12 items-center rounded-full bg-[#4BFA94] px-8 text-[11px] font-bold uppercase tracking-[0.16em] text-black transition hover:bg-emerald-300" style={{ boxShadow: "0 0 32px -6px rgba(75,250,148,0.6)" }}>Register</Link>
+        <Link href="/create-event" className="inline-flex h-12 items-center rounded-full border border-white/20 bg-white/[0.04] px-7 text-[11px] font-bold uppercase tracking-[0.14em] text-white transition hover:border-white/35 hover:bg-white/[0.07]">Create event</Link>
+      </div>
+    </>
   );
+}
 
-  /** Stacked scene columns share one screen position; only the visible scene should receive clicks. */
-  function sceneIndexFromScrollProgress(v: number) {
-    if (v < 0.29) return 0;
-    if (v < 0.61) return 1;
-    return 2;
-  }
-  const [pointerScene, setPointerScene] = useState(0);
-  useLayoutEffect(() => {
-    setPointerScene(sceneIndexFromScrollProgress(progress.get()));
-  }, [progress, sectionTop, sectionRange]);
+function CinematicHomeTopSection() {
+  const { containerRef, stageRef, headlineRef, progress, sectionTop, sectionRange, revealDistance, compact, scale } = useHeroScroll();
+  const stageVisible = useInView(stageRef, { amount: 0.1 });
+  const [pointerScene, setPointerScene] = useState(() => progress.get() < 0.4 ? 0 : progress.get() < 0.7 ? 1 : 2);
+  const [visiblePhase, setVisiblePhase] = useState(0);
+  const [heroActive, setHeroActive] = useState(true);
+  const reduceMotion = useReducedMotion();
   useMotionValueEvent(progress, "change", (v) => {
-    setPointerScene(sceneIndexFromScrollProgress(v));
+    setHeroActive(previous => previous === (v < 0.14) ? previous : v < 0.14);
+    const nextScene = v < 0.4 ? 0 : v < 0.7 ? 1 : 2;
+    setPointerScene(previous => previous === nextScene ? previous : nextScene);
+    const nextPhase = v < 0.35 ? 0 : v < 0.44 ? 1 : v < 0.65 ? 2 : v < 0.75 ? 3 : 4;
+    setVisiblePhase(previous => previous === nextPhase ? previous : nextPhase);
   });
 
   /* scene fades */
-  const s1 = useTransform(progress, [0, 0.20, 0.30], [1, 1, 0]);
-  const s2 = useTransform(progress, [0.24, 0.34, 0.54, 0.64], [0, 1, 1, 0]);
-  const s3 = useTransform(progress, [0.56, 0.66, 1], [0, 1, 1]);
+  const s1 = useTransform(progress, [0, 0.34, 0.42], [1, 1, 0]);
+  const s2 = useTransform(progress, [0.36, 0.44, 0.64, 0.72], [0, 1, 1, 0]);
+  const s3 = useTransform(progress, [0.66, 0.74, 1], [0, 1, 1]);
 
   /* phone screens */
-  const p1 = useTransform(progress, [0, 0.22, 0.32], [1, 1, 0]);
-  const p2 = useTransform(progress, [0.26, 0.36, 0.56, 0.66], [0, 1, 1, 0]);
-  const p3 = useTransform(progress, [0.58, 0.68, 1], [0, 1, 1]);
+  const p1 = useTransform(progress, [0, 0.35, 0.43], [1, 1, 0]);
+  const p2 = useTransform(progress, [0.37, 0.45, 0.65, 0.73], [0, 1, 1, 0]);
+  const p3 = useTransform(progress, [0.67, 0.75, 1], [0, 1, 1]);
 
   /*
    * Phone is VISIBLE on initial load — angled at bottom of screen like doorlist.
    * Rises and straightens as user scrolls. rotateZ starts tilted, normalises.
    */
-  const phoneY       = useTransform(progress, [0, 0.28, 1],   [320, 0, -16]);
-  const phoneRotateX = useTransform(progress, [0, 0.28, 1],   [-10, 0, 2]);
-  const phoneRotateY = useTransform(progress, [0, 0.28, 0.7, 1], [-8, 0, -5, -10]);
-  const phoneRotateZ = useTransform(progress, [0, 0.28, 1],   [-6, 0, 3]);
+  const phoneY = useTransform(() => (revealDistance.get() * (1 - Math.min(progress.get() / 0.26, 1)) - Math.max(0, progress.get() - 0.6) * 30) / scale);
+  const phoneRotateX = useTransform(progress, [0, 0.26, 1], [-7, 0, 1]);
+  const phoneRotateY = useTransform(progress, [0, 0.26, 1], [-6, 0, -5]);
+  const phoneRotateZ = useTransform(progress, [0, 0.26, 1], [-5, 0, 2]);
 
   /* hero headline visible immediately, fades out as side text appears */
-  const heroOpacity = useTransform(progress, [0, 0.22, 0.40], [1, 1, 0]);
-  const heroY       = useTransform(progress, [0.22, 0.40], [0, -28]);
+  const heroOpacity = useTransform(progress, [0, 0.08, 0.14], [1, 1, 0]);
+  const heroY = useTransform(progress, [0.08, 0.14], [0, -24]);
 
   /* side text slides in as phone settles */
-  const sideOpacity = useTransform(progress, [0.24, 0.44], [0, 1]);
-  const sideXL      = useTransform(progress, [0.24, 0.44], [-32, 0]);
-  const sideXR      = useTransform(progress, [0.24, 0.44], [32, 0]);
+  const sideOpacity = useTransform(progress, [0.14, 0.22], [0, 1]);
+  const sideXL = useTransform(progress, [0.14, 0.22], [-32, 0]);
+  const sideXR = useTransform(progress, [0.14, 0.22], [32, 0]);
 
   /* glow behind phone */
   const glowOpacity = useTransform(progress, [0, 0.30, 0.7, 1], [0.4, 0.9, 0.85, 0.5]);
@@ -1234,7 +1241,7 @@ export function HomeTopSection() {
   const hintOpacity = useTransform(progress, [0, 0.06], [1, 0]);
 
   /* Above phone: fill empty space after hero fades. On lg+, fade out as side columns take over. */
-  const digestMount = useTransform(progress, [0.24, 0.36, 1], [0, 1, 1]);
+  const digestMount = useTransform(progress, [0.14, 0.22, 1], [0, 1, 1]);
   const digestDesktopOpacity = useTransform([digestMount, sideOpacity], ([m, s]) => {
     const mount = typeof m === "number" ? m : 0;
     const side = typeof s === "number" ? s : 0;
@@ -1243,14 +1250,14 @@ export function HomeTopSection() {
 
   const sceneOps = [s1, s2, s3];
   const phoneOps = [p1, p2, p3];
+  const eventProgress = useTransform(progress, v => Math.max(0.2, v));
 
   return (
     <div
       ref={containerRef}
-      className="relative bg-black"
-      style={{ minHeight: "320vh" }}
+      className={styles.section}
     >
-      <div className="sticky top-0 h-screen" style={{ overflow: "clip" }}>
+      <div ref={stageRef} className={styles.stage}>
 
         {/* ambient glows — radial gradients (no `filter: blur`) so we don't repaint on scroll */}
         <div
@@ -1276,7 +1283,7 @@ export function HomeTopSection() {
                 className="absolute inset-x-0 top-0 flex flex-col items-center text-center"
                 style={{
                   opacity: sceneOps[i],
-                  pointerEvents: pointerScene === i ? "auto" : "none",
+                  pointerEvents: pointerScene === i && !heroActive ? "auto" : "none",
                 }}
               >
                 <p className="text-[10px] font-bold uppercase tracking-[0.26em] text-[#4BFA94]">{scene.eyebrow}</p>
@@ -1287,6 +1294,7 @@ export function HomeTopSection() {
                 </h2>
                 <Link
                   href={scene.cta.href}
+                  tabIndex={pointerScene === i && !heroActive ? 0 : -1}
                   className="mt-3 inline-flex h-10 items-center rounded-full bg-[#4BFA94] px-6 text-[10px] font-bold uppercase tracking-[0.14em] text-black transition hover:bg-emerald-300"
                   style={{ boxShadow: "0 0 20px -4px rgba(75,250,148,0.45)" }}
                 >
@@ -1308,7 +1316,7 @@ export function HomeTopSection() {
                 className="absolute inset-x-0 top-0 flex flex-col items-center text-center"
                 style={{
                   opacity: sceneOps[i],
-                  pointerEvents: pointerScene === i ? "auto" : "none",
+                  pointerEvents: pointerScene === i && !heroActive ? "auto" : "none",
                 }}
               >
                 <p className="text-[10px] font-bold uppercase tracking-[0.26em] text-[#4BFA94]">{scene.eyebrow}</p>
@@ -1318,6 +1326,7 @@ export function HomeTopSection() {
                 </h2>
                 <Link
                   href={scene.cta.href}
+                  tabIndex={pointerScene === i && !heroActive ? 0 : -1}
                   className="mt-2.5 inline-flex h-9 items-center rounded-full bg-[#4BFA94] px-5 text-[10px] font-bold uppercase tracking-[0.12em] text-black transition hover:bg-emerald-300"
                   style={{ boxShadow: "0 0 16px -4px rgba(75,250,148,0.4)" }}
                 >
@@ -1330,47 +1339,12 @@ export function HomeTopSection() {
 
         {/* ── HERO HEADLINE — visible on load, fades as side text takes over ── */}
         <motion.div
-          style={{ opacity: heroOpacity, y: heroY }}
+          ref={headlineRef}
+          style={{ opacity: heroOpacity, y: heroY, pointerEvents: heroActive ? "auto" : "none" }}
+          aria-hidden={!heroActive}
           className="absolute inset-x-0 top-0 z-10 flex flex-col items-center px-6 pt-[clamp(5.25rem,9svh,7.5rem)] text-center lg:pt-[10vh]"
         >
-          <p className="text-[10px] font-bold uppercase tracking-[0.28em] text-[#4BFA94]">
-            Discover
-          </p>
-          <h1 className="mt-3 text-5xl font-black uppercase leading-[0.88] tracking-[-0.04em] text-white sm:text-6xl lg:text-7xl">
-            Your campus.<br />
-            <span className="relative inline-block overflow-hidden" style={{ minWidth: "8ch" }}>
-              <AnimatePresence mode="wait" initial={false}>
-                <motion.span
-                  key={phraseIdx}
-                  className="inline-block bg-gradient-to-r from-[#4BFA94] to-emerald-300 bg-clip-text text-transparent"
-                  initial={{ y: "60%", opacity: 0 }}
-                  animate={{ y: "0%", opacity: 1 }}
-                  exit={{ y: "-60%", opacity: 0 }}
-                  transition={{ duration: 0.38, ease: [0.25, 0.46, 0.45, 0.94] }}
-                >
-                  {cyclingPhrases[phraseIdx]}
-                </motion.span>
-              </AnimatePresence>
-            </span>
-          </h1>
-          <p className="mt-5 max-w-[280px] text-sm leading-relaxed text-zinc-500">
-            Every party, show, and event near you, curated by students, for students.
-          </p>
-          <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
-            <Link
-              href="/signup"
-              className="inline-flex h-12 items-center rounded-full bg-[#4BFA94] px-8 text-[11px] font-bold uppercase tracking-[0.16em] text-black transition hover:bg-emerald-300"
-              style={{ boxShadow: "0 0 32px -6px rgba(75,250,148,0.6)" }}
-            >
-              Register
-            </Link>
-            <Link
-              href="/create-event"
-              className="inline-flex h-12 items-center rounded-full border border-white/20 bg-white/[0.04] px-7 text-[11px] font-bold uppercase tracking-[0.14em] text-white transition hover:border-white/35 hover:bg-white/[0.07]"
-            >
-              Create event
-            </Link>
-          </div>
+          <HeroHeadline active={heroActive} />
         </motion.div>
 
         {/* ── LEFT SIDE TEXT ── */}
@@ -1393,17 +1367,21 @@ export function HomeTopSection() {
                 <h2 className="mt-2 w-[220px] text-2xl font-black uppercase leading-[0.92] tracking-[-0.03em] text-white lg:text-3xl">
                   {scene.line1}
                   <br />
-                  <AnimatedTextCycle
-                    words={scene.cycleWords ?? [scene.line2]}
-                    interval={2200}
-                    className="text-2xl font-black uppercase tracking-[-0.03em] text-white lg:text-3xl"
-                  />
+                  {compact ? <span className="text-white">{scene.line2}</span> : (
+                    <AnimatedTextCycle
+                      words={scene.cycleWords ?? [scene.line2]}
+                      interval={2200}
+                      active={pointerScene === i}
+                      className="text-2xl font-black uppercase tracking-[-0.03em] text-white lg:text-3xl"
+                    />
+                  )}
                 </h2>
                 <p className="mt-3 w-[200px] text-[12px] leading-relaxed text-zinc-500">
                   {scene.body}
                 </p>
                 <Link
                   href={scene.cta.href}
+                  tabIndex={pointerScene === i && !heroActive ? 0 : -1}
                   className="mt-5 inline-flex h-10 items-center rounded-full bg-[#4BFA94] px-6 text-[10px] font-bold uppercase tracking-[0.16em] text-black transition hover:bg-emerald-300"
                   style={{ boxShadow: "0 0 20px -4px rgba(75,250,148,0.45)" }}
                 >
@@ -1439,7 +1417,7 @@ export function HomeTopSection() {
         </div>
 
         {/* ── PHONE — visible on load at angle, rises and straightens on scroll ── */}
-        <div className="absolute bottom-0 left-1/2 z-[5]" style={{ transform: "translateX(-50%)" }}>
+        <div className={`absolute bottom-8 left-1/2 z-[5] ${styles.device}`} style={{ transform: "translateX(-50%)", width: 300 * scale, height: 620 * scale }}>
           <motion.div
             aria-hidden
             style={{
@@ -1455,48 +1433,53 @@ export function HomeTopSection() {
               willChange: "opacity",
             }}
           />
-          <div style={{ perspective: "1500px", transform: "translateZ(0)" }}>
+          <div style={{ perspective: compact ? "none" : "1500px", transformOrigin: "top left", transform: `scale(${scale})` }}>
             <motion.div
-              style={
-                reduceMotion
-                  ? { transform: "translateZ(0)" }
-                  : {
-                      y: phoneY,
-                      rotateX: phoneRotateX,
-                      rotateY: phoneRotateY,
-                      rotateZ: phoneRotateZ,
-                      willChange: "transform",
-                      backfaceVisibility: "hidden",
-                      transformStyle: "preserve-3d",
-                    }
-              }
+              style={{
+                y: phoneY,
+                rotateX: compact ? 0 : phoneRotateX,
+                rotateY: compact ? 0 : phoneRotateY,
+                rotateZ: phoneRotateZ,
+                willChange: "transform",
+                backfaceVisibility: "hidden",
+                transformStyle: compact ? "flat" : "preserve-3d",
+              }}
             >
               <PhoneShell>
-                <motion.div style={{ opacity: phoneOps[0], position: "absolute", inset: 0, willChange: "opacity", transform: "translateZ(0)" }}>
-                  <EventDetailScreen progress={progress} />
+                <motion.div className={styles.screen} style={{ opacity: phoneOps[0], display: visiblePhase > 1 ? "none" : undefined }}>
+                  {visiblePhase <= 1 && <EventDetailScreen progress={eventProgress} />}
                 </motion.div>
-                <motion.div style={{ opacity: phoneOps[1], position: "absolute", inset: 0, willChange: "opacity", transform: "translateZ(0)" }}>
-                  <HostCreateEventPreviewScreen progress={progress} />
+                <motion.div className={styles.screen} style={{ opacity: phoneOps[1], display: visiblePhase === 0 || visiblePhase === 4 ? "none" : undefined }}>
+                  {visiblePhase >= 1 && visiblePhase <= 3 && <HostCreateEventPreviewScreen progress={progress} active={stageVisible && pointerScene === 1} />}
                 </motion.div>
-                <motion.div style={{ opacity: phoneOps[2], position: "absolute", inset: 0, willChange: "opacity", transform: "translateZ(0)" }}>
-                  <TicketScreen progress={progress} />
+                <motion.div className={styles.screen} style={{ opacity: phoneOps[2], display: visiblePhase < 3 ? "none" : undefined }}>
+                  {visiblePhase >= 3 && <TicketScreen progress={progress} active={stageVisible && pointerScene === 2} />}
                 </motion.div>
               </PhoneShell>
             </motion.div>
           </div>
         </div>
 
-        {/* progress dots */}
-        <div className="absolute bottom-8 right-8 z-20 flex flex-col gap-2">
-          {phoneOps.map((op, i) => (
-            <motion.div key={i} style={{ opacity: op }} className="h-1.5 w-1.5 rounded-full bg-[#4BFA94]" />
+        {/* Chapter markers double as precise jump links. */}
+        <nav aria-label="Explore RAGE" className={`absolute z-20 ${styles.chapters}`}>
+          {scenes.map((scene, i) => (
+            <button
+              type="button"
+              key={scene.eyebrow}
+              className={styles.chapter}
+              aria-current={pointerScene === i ? "step" : undefined}
+              onClick={() => window.scrollTo({ top: sectionTop.get() + sectionRange.get() * [0.31, 0.54, 0.85][i], behavior: "smooth" })}
+            >
+              <span>{["Discover", "Host", "Enter"][i]}</span>
+              <span className={styles.chapterTrack} aria-hidden><motion.span className={styles.chapterFill} style={{ scaleX: phoneOps[i] }} /></span>
+            </button>
           ))}
-        </div>
+        </nav>
 
         {/* scroll hint */}
         <motion.div
           style={{ opacity: hintOpacity }}
-          className="absolute bottom-8 left-1/2 z-20 flex -translate-x-1/2 flex-col items-center gap-2"
+          className="absolute bottom-8 left-1/2 z-20 hidden -translate-x-1/2 flex-col items-center gap-2 lg:flex"
         >
           <span className="text-[9px] font-semibold uppercase tracking-[0.22em] text-zinc-600">
             Scroll
@@ -1511,4 +1494,48 @@ export function HomeTopSection() {
       </div>
     </div>
   );
+}
+
+function StaticHomeTopSection() {
+  const eventProgress = useMotionValue(0.2);
+
+  return (
+    <section className="relative overflow-hidden bg-black px-5 pb-16 pt-24 text-center sm:pt-28">
+      <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-[650px] bg-[radial-gradient(ellipse_at_50%_35%,rgba(75,250,148,0.09),transparent_62%)]" />
+      <div className="relative z-10 mx-auto flex max-w-4xl flex-col items-center">
+        <HeroHeadline />
+        <div className={`relative mt-14 h-[422px] w-[204px] sm:h-[620px] sm:w-[300px] ${styles.device}`}>
+          <div className="origin-top-left scale-[0.68] sm:scale-100">
+            <PhoneShell><EventDetailScreen progress={eventProgress} /></PhoneShell>
+          </div>
+        </div>
+        <div className="mt-12 grid w-full max-w-2xl gap-3 text-left sm:grid-cols-2">
+          {scenes.slice(1).map((scene, i) => (
+            <Link key={scene.eyebrow} href={scene.cta.href} className="rounded-2xl border border-white/10 bg-white/[0.035] p-5 transition hover:border-[#4BFA94]/50">
+              <span className="text-[10px] font-bold uppercase tracking-[0.24em] text-[#4BFA94]">0{i + 2} / {scene.eyebrow}</span>
+              <h2 className="mt-3 text-2xl font-black uppercase leading-none text-white">{scene.line1} <span className="text-[#4BFA94]">{scene.line2}</span></h2>
+              <p className="mt-3 text-sm leading-relaxed text-zinc-400">{scene.body}</p>
+              <span className="mt-5 inline-block text-xs font-bold uppercase tracking-widest text-[#4BFA94]">{scene.cta.label} →</span>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function subscribeToReducedMotion(onChange: () => void) {
+  const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+  media.addEventListener("change", onChange);
+  return () => media.removeEventListener("change", onChange);
+}
+
+function getReducedMotion() {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
+export function HomeTopSection() {
+  // The server snapshot keeps the first client render identical to the HTML.
+  const reduceMotion = useSyncExternalStore(subscribeToReducedMotion, getReducedMotion, () => false);
+  return reduceMotion ? <StaticHomeTopSection /> : <CinematicHomeTopSection />;
 }
