@@ -911,17 +911,17 @@ function TicketScreen({ progress }: { progress: MotionValue<number> }) {
 
 /* ─── titanium phone shell ──────────────────────────────────────── */
 export function PhoneShell({ children, w = 300, h = 620 }: { children: ReactNode; w?: number; h?: number }) {
-  // Screen-window insets for the device art in public/phone-frame.png (titanium
-  // iPhone, Dynamic Island). The PNG's screen area is knocked out to transparent so
-  // it overlays as a bezel on top of the animated screens. Insets sit a bit inside
-  // the opening so the screens bleed under the opaque bezel — no white/edge gap.
-  const screen = { top: "1.0%", bottom: "1.0%", left: "3.3%", right: "3.3%" };
+  // Screen-window insets measured from public/phone-frame.png (432×892). The PNG's
+  // screen is transparent, so UI must stay inside that opening. A looser box paints
+  // through the rounded corners and shows as a rectangle past the bezel.
+  const screen = { top: "1.9%", bottom: "1.8%", left: "4.4%", right: "4.6%" };
+  const radius = Math.round(w * 0.102);
 
   return (
-    <div style={{ position: "relative", width: w, height: h, flexShrink: 0 }}>
+    <div style={{ position: "relative", width: w, height: h, flexShrink: 0, isolation: "isolate" }}>
       {/* ambient drop shadow under the device */}
       <div aria-hidden style={{
-        position: "absolute", inset: 0, borderRadius: w * 0.13, pointerEvents: "none",
+        position: "absolute", inset: 0, borderRadius: w * 0.14, pointerEvents: "none",
         boxShadow: "0 30px 80px -24px rgba(0,0,0,0.85)",
       }} />
 
@@ -929,10 +929,12 @@ export function PhoneShell({ children, w = 300, h = 620 }: { children: ReactNode
       <div style={{
         position: "absolute",
         top: screen.top, left: screen.left, right: screen.right, bottom: screen.bottom,
-        borderRadius: w * 0.085,
+        borderRadius: radius,
         overflow: "hidden",
+        clipPath: `inset(0 round ${radius}px)`,
         background: "#000",
         zIndex: 1,
+        transform: "translateZ(0)",
       }}>
         {children}
       </div>
@@ -1279,18 +1281,17 @@ export function HomeTopSection() {
                       rotateZ: phoneRotateZ,
                       willChange: "transform",
                       backfaceVisibility: "hidden",
-                      transformStyle: "preserve-3d",
                     }
               }
             >
               <PhoneShell>
-                <motion.div style={{ opacity: phoneOps[0], position: "absolute", inset: 0, willChange: "opacity", transform: "translateZ(0)" }}>
+                <motion.div style={{ opacity: phoneOps[0], position: "absolute", inset: 0 }}>
                   <FeedScreen progress={progress} />
                 </motion.div>
-                <motion.div style={{ opacity: phoneOps[1], position: "absolute", inset: 0, willChange: "opacity", transform: "translateZ(0)" }}>
+                <motion.div style={{ opacity: phoneOps[1], position: "absolute", inset: 0 }}>
                   <HostCreateEventPreviewScreen progress={progress} />
                 </motion.div>
-                <motion.div style={{ opacity: phoneOps[2], position: "absolute", inset: 0, willChange: "opacity", transform: "translateZ(0)" }}>
+                <motion.div style={{ opacity: phoneOps[2], position: "absolute", inset: 0 }}>
                   <TicketScreen progress={progress} />
                 </motion.div>
               </PhoneShell>
